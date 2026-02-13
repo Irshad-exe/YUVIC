@@ -1,0 +1,375 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">{{dialogTitle}}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" aria-label="Close dialog" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="productForm" (ngSubmit)="submit()">
+
+      <!-- Product Information Section -->
+      <h4 class="mt-2 mb-3">Product Information</h4>
+      <div class="row">
+        <!-- Product Name -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Product Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-icon matSuffix>inventory_2</mat-icon>
+            <mat-error *ngIf="productForm.get('name')?.hasError('required')">Product name is required</mat-error>
+            <mat-error *ngIf="productForm.get('name')?.hasError('minlength')">Product name must be at least 2
+              characters</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Product Slug -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Product Slug</mat-label>
+            <input matInput formControlName="slug" required>
+            <mat-icon matSuffix>link</mat-icon>
+            <mat-error *ngIf="productForm.get('slug')?.hasError('required')">Slug is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- SKU and Brand -->
+      <div class="row">
+        <!-- SKU -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>SKU</mat-label>
+            <input matInput formControlName="sku" required>
+            <mat-icon matSuffix>qr_code</mat-icon>
+            <mat-error *ngIf="productForm.get('sku')?.hasError('required')">SKU is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Brand -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Brand</mat-label>
+            <mat-select formControlName="brand_id">
+              <mat-option>-- Select Brand --</mat-option>
+              @for (brand of brands; track brand.id) {
+              <mat-option [value]="brand.id">{{brand.name}}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matSuffix>branding_watermark</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Category and Status -->
+      <div class="row">
+        <!-- Parent Category -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Parent Category</mat-label>
+            <mat-select formControlName="parent_category_id" (selectionChange)="onParentCategoryChange($event.value)">
+              <mat-option>-- Select Parent Category --</mat-option>
+              @for (category of parentCategories; track category.id) {
+              <mat-option [value]="category.id">{{category.name}}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matSuffix>folder</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Sub Category -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Sub Category</mat-label>
+            <mat-select formControlName="category_id" required [disabled]="!productForm.get('parent_category_id')?.value">
+              <mat-option>-- Select Sub Category --</mat-option>
+              @for (category of subCategories; track category.id) {
+              <mat-option [value]="category.id">{{category.name}}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matSuffix>category</mat-icon>
+            <mat-error *ngIf="productForm.get('category_id')?.hasError('required')">Sub Category is required</mat-error>
+          </mat-form-field>
+        </div>
+      
+
+      <div class="row">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Product Type</mat-label>
+            <mat-select formControlName="product_type_id" required>
+              <mat-option>-- Select Product Type --</mat-option>
+              @for (productType of productTypes; track productType.id) {
+              <mat-option [value]="productType.id">{{productType.name}}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matSuffix>category</mat-icon>
+            <mat-error *ngIf="productForm.get('product_type_id')?.hasError('required')">Product Type is
+              required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Status -->
+
+      </div>
+
+      <!-- Short Description -->
+      <div class="row">
+
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Short Description</mat-label>
+            <textarea matInput formControlName="short_description" rows="2"
+              placeholder="Brief product description for listings..."></textarea>
+            <mat-icon matSuffix>short_text</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="row">
+        <div class="col-xl-12 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Product Description</mat-label>
+            <textarea matInput formControlName="description" rows="4"
+              placeholder="Enter detailed product description..."></textarea>
+            <mat-icon matSuffix>description</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Pricing Information -->
+      <h4 class="mt-4 mb-3">Pricing & Inventory</h4>
+      <div class="row">
+        <!-- Selling Price -->
+        <div class="col-xl-4 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Selling Price ($)</mat-label>
+            <input matInput type="number" formControlName="price" min="0" step="0.01" required>
+            <mat-icon matSuffix>attach_money</mat-icon>
+            <mat-error *ngIf="productForm.get('price')?.hasError('required')">Price is required</mat-error>
+            <mat-error *ngIf="productForm.get('price')?.hasError('min')">Price must be positive</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Compare Price -->
+        <div class="col-xl-4 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Compare Price ($)</mat-label>
+            <input matInput type="number" formControlName="compare_price" min="0" step="0.01"
+              placeholder="Original price for discounts">
+            <mat-icon matSuffix>compare_arrows</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Cost Price -->
+        <div class="col-xl-4 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Cost Price ($)</mat-label>
+            <input matInput type="number" formControlName="cost_price" min="0" step="0.01">
+            <mat-icon matSuffix>paid</mat-icon>
+            <mat-error *ngIf="productForm.get('cost_price')?.hasError('min')">Cost price must be positive</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Stock and Weight -->
+      <div class="row">
+        <!-- Stock Quantity -->
+        <div class="col-xl-4 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Stock Quantity</mat-label>
+            <input matInput type="number" formControlName="quantity" min="0" required>
+            <mat-icon matSuffix>inventory</mat-icon>
+            <mat-error *ngIf="productForm.get('quantity')?.hasError('required')">Quantity is required</mat-error>
+            <mat-error *ngIf="productForm.get('quantity')?.hasError('min')">Quantity must be positive</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Weight -->
+        <div class="col-xl-4 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Weight (kg)</mat-label>
+            <input matInput type="number" formControlName="weight" min="0" step="0.01">
+            <mat-icon matSuffix>fitness_center</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Track Quantity -->
+        <div class="col-xl-4 mb-2 d-flex align-items-center">
+          <mat-checkbox formControlName="track_quantity" class="mt-3">
+            Track Quantity
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <!-- Product Tags -->
+      <div class="row">
+        <div class="col-xl-12 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Product Tags</mat-label>
+            <mat-chip-grid #chipGrid aria-label="Product tags selection">
+              @for (tag of productForm.get('tags')?.value; track tag) {
+              <mat-chip-row (removed)="removeTag(tag)">
+                {{tag}}
+                <!-- 🆕 FIX: Remove aria-label binding to fix the error -->
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input placeholder="New tag..." #tagInput [formControl]="tagInputControl" [matChipInputFor]="chipGrid"
+              [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addTag($event)">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+              @for (tag of filteredTags; track tag) {
+              <mat-option [value]="tag">{{tag}}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Product Features -->
+      <h4 class="mt-4 mb-3">Product Features</h4>
+      <div class="row">
+        <div class="col-xl-6 mb-2">
+          <mat-checkbox formControlName="is_featured">
+            Featured Product
+          </mat-checkbox>
+        </div>
+        <div class="col-xl-6 mb-2">
+          <mat-checkbox formControlName="is_published">
+            Published
+          </mat-checkbox>
+        </div>
+      </div>
+      <!-- Add this section after the Product Features section -->
+
+      <!-- Additional Information Section -->
+      <h4 class="mt-4 mb-3">Additional Information</h4>
+      <div class="row">
+        <!-- Ingredients -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Ingredients</mat-label>
+            <textarea matInput formControlName="ingredients" rows="3"
+              placeholder="List product ingredients..."></textarea>
+            <mat-icon matSuffix>restaurant</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Calories -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Calories</mat-label>
+            <textarea matInput formControlName="calories" rows="3" placeholder="Enter calorie count"></textarea>
+            <mat-icon matSuffix>local_fire_department</mat-icon>
+
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Delivery Information -->
+      <div class="row">
+        <div class="col-xl-12 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Delivery Information</mat-label>
+            <textarea matInput formControlName="delivery_info" rows="2"
+              placeholder="Delivery details, shipping info, etc..."></textarea>
+            <mat-icon matSuffix>local_shipping</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Image Upload Section -->
+      <h4 class="mt-4 mb-3">Product Images</h4>
+      <div class="row">
+        <div class="col-xl-12 mb-3">
+          <div class="file-drop-area" [class.dragging]="isDragging" (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="triggerFileInput()">
+            <input #fileInput type="file" id="uploadFile" class="file-input" multiple accept="image/*"
+              (change)="onFileSelected($event)">
+            <div class="file-msg">
+              <mat-icon class="file-icon">cloud_upload</mat-icon>
+              <span>Drop product images here or click to browse</span>
+            </div>
+          </div>
+          <small class="text-muted">Supported formats: JPG, PNG, GIF, WebP. Maximum file size: 5MB</small>
+        </div>
+      </div>
+
+      <!-- Image Previews -->
+      <div class="row" *ngIf="uploadedImages.length > 0">
+        <div class="col-xl-12 mb-3">
+          <h5>Selected Images ({{ uploadedImages.length }})</h5>
+          <div class="image-preview-container">
+            <div class="image-preview-item" *ngFor="let image of uploadedImages; let i = index">
+              <img [src]="image.url || image.path" [alt]="image.originalname">
+              <button type="button" class="remove-image-btn" (click)="removeImage(i, image)" mat-icon-button>
+                <mat-icon>close</mat-icon>
+              </button>
+              <div class="image-info">
+                <small>{{ image.originalname }}</small>
+                <small>{{ (image.size / 1024).toFixed(2) }} KB</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEO Information -->
+      <h4 class="mt-4 mb-3">SEO Information</h4>
+      <div class="row">
+        <div class="col-xl-12 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>SEO Title</mat-label>
+            <input matInput formControlName="seo_title" placeholder="Optimized title for search engines">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-12 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>SEO Description</mat-label>
+            <textarea matInput formControlName="seo_description" rows="2"
+              placeholder="Meta description for search engines"></textarea>
+            <mat-icon matSuffix>description</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Profit Margin Display -->
+      <div class="row" *ngIf="productForm.get('price')?.value && productForm.get('cost_price')?.value">
+        <div class="col-xl-12 mb-2">
+          <div class="profit-info" [class.negative]="!isProfitPositive()">
+            <strong>Profit Margin: </strong>
+            <span [class.text-success]="isProfitPositive()" [class.text-danger]="!isProfitPositive()">
+              {{ getProfitMargin() | number:'1.2-2' }}%
+              ({{ getProfitAmount() | currency }})
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Buttons -->
+      <div class="row mt-4">
+        <div class="col-xl-12 mb-2">
+          <div class="example-button-row">
+            <!-- 🆕 FIX: Typo in 'action' variable -->
+            <button mat-flat-button color="primary" type="submit" [disabled]="!productForm.valid">
+              {{ action === 'edit' ? 'Update Product' : 'Add Product' }}
+            </button>
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1" type="button">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

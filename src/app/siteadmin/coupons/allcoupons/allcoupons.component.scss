@@ -1,0 +1,18 @@
+:host ::ng-deep .column-filter .mat-mdc-select-arrow {
+  display: none;
+}
+:host ::ng-deep .advance-table .mat-mdc-header-cell {
+  font-weight: 500;
+}
+:host ::ng-deep .mat-column-code {
+  min-width: 120px;
+}
+:host ::ng-deep .mat-column-type {
+  min-width: 100px;
+}
+:host ::ng-deep .mat-column-value {
+  min-width: 80px;
+}
+.mat-icon{
+  height: auto !important;
+}

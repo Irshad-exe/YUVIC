@@ -1,0 +1,98 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="'Dashboard'" [items]="['Admin', 'Dashboard']"></app-breadcrumb>
+    </div>
+    
+    <!-- Refresh Button -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <button mat-flat-button color="primary" (click)="refresh()" [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon>
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row">
+      <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12" *ngFor="let stat of stats">
+        <mat-card class="stats-card">
+          <mat-card-content>
+            <div class="stats-content">
+              <div class="stats-icon" [class]="'bg-' + stat.color">
+                <mat-icon>{{stat.icon}}</mat-icon>
+              </div>
+              <div class="stats-info">
+                <h3>{{stat.value | number}}</h3>
+                <p>{{stat.title}}</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Recent Orders & Sales Chart -->
+    <div class="row mt-4">
+      <!-- Recent Orders -->
+      <div class="col-xl-6 col-lg-12">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Recent Orders</mat-card-title>
+            <button mat-icon-button (click)="refresh()" matTooltip="Refresh">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="recent-orders">
+              <div *ngIf="isLoading" class="text-center p-4">
+                <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
+              </div>
+              <div *ngIf="!isLoading && (!dashboardData.recentOrders || dashboardData.recentOrders?.length === 0)" class="text-center p-4">
+                No recent orders
+              </div>
+              <div *ngFor="let order of dashboardData.recentOrders" class="order-item">
+                <div class="order-info">
+                  <strong>#{{order.order_number}}</strong>
+                  <span class="customer">{{order.User?.name}}</span>
+                </div>
+                <div class="order-amount">
+                  ₹{{order.final_amount}}
+                  <span class="status" [class]="'status-' + order.order_status">
+                    {{order.order_status}}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Sales Chart -->
+      <div class="col-xl-6 col-lg-12">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Sales Overview (Last 7 Days)</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="sales-chart">
+              <div *ngIf="isLoading" class="text-center p-4">
+                <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
+              </div>
+              <div *ngIf="!isLoading && dashboardData.salesChart" class="chart-bars">
+                <div *ngFor="let day of dashboardData.salesChart" class="chart-bar">
+                  <div class="bar-label">{{day.date | date: 'EEE'}}</div>
+                  <div class="bar-container">
+                    <div class="bar-fill" [style.height]="(day.sales / getMaxSales()) * 100 + '%'"></div>
+                  </div>
+                  <div class="bar-value">₹{{day.sales}}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</section>

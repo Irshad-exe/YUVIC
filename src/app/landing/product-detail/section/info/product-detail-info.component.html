@@ -1,0 +1,151 @@
+<div class="ps-xxl-3">
+  <p class="fs-sm text-body-secondary">{{ product?.category }}</p>
+  <h1 class="h5 mb-2">{{ product?.name }}</h1>
+  <div class="fs-sm fw-medium">{{ product?.weight }}</div>
+
+  <div class="border rounded-pill px-4 py-2 my-4">
+    <div class="text-dark-emphasis fs-sm py-1">
+      We will deliver your goods as soon as possible
+      <a class="text-dark-emphasis fw-medium ms-1" href="#!">Check availability</a>
+    </div>
+  </div>
+
+  <div class="h3">
+    ${{ product?.price }}
+    <del *ngIf="hasDiscount()" class="fs-sm fw-normal text-body-tertiary ms-1">
+      ${{ product?.compare_price }}
+    </del>
+    <span *ngIf="hasDiscount()" class="badge text-bg-danger ms-2">
+      -{{ getDiscountPercentage() }}%
+    </span>
+  </div>
+
+  <div class="d-flex gap-3 mb-4">
+    <div class="count-input flex-shrink-0 rounded-pill">
+      <button type="button" class="btn btn-icon btn-lg" (click)="decrementQuantity()" [disabled]="quantity <= 1"
+        aria-label="Decrement quantity">
+        <i class="ci-minus"></i>
+      </button>
+      <input type="number" class="form-control form-control-lg" [value]="quantity" min="1" readonly>
+      <button type="button" class="btn btn-icon btn-lg" (click)="incrementQuantity()" aria-label="Increment quantity">
+        <i class="ci-plus"></i>
+      </button>
+    </div>
+    <button type="button" class="btn btn-lg btn-primary rounded-pill w-100" (click)="addToCart()">
+      Add to cart
+    </button>
+    <button type="button" class="btn btn-icon btn-lg btn-secondary rounded-circle" (click)="addToWishlist()"
+      aria-label="Add to wishlist">
+      <i class="ci-heart"></i>
+    </button>
+  </div>
+
+  <p class="fs-sm mb-4"> {{ product?.description }}</p>
+
+  <div class="d-flex flex-wrap gap-3 gap-xxl-4 fs-sm text-dark-emphasis mb-2">
+    <div class="d-flex align-items-center me-3" *ngFor="let feature of product?.features">
+      <i class="ci-gluten-free fs-xl text-body-emphasis me-2"></i>
+      {{ feature }}
+    </div>
+  </div>
+
+  <!-- Related products inside info section -->
+  <h2 class="h5 pt-5">Related products</h2>
+  <div class="d-flex border rounded-5 px-2 mb-4">
+    <div class="w-50">
+      <div class="card product-card h-100 bg-transparent border-0 shadow-none">
+        <div class="position-relative z-2">
+          <button type="button"
+            class="btn btn-icon btn-sm btn-secondary animate-pulse fs-sm bg-body border-0 position-absolute top-0 end-0 z-2 mt-1 mt-sm-2 me-1 me-sm-2"
+            aria-label="Add to Wishlist">
+            <i class="ci-heart animate-target"></i>
+          </button>
+          <a class="d-block p-2 p-lg-3" href="#!">
+            <div class="ratio" style="--cz-aspect-ratio: calc(160 / 191 * 100%)">
+              <img src="assets/cartzilla/img/shop/grocery/12.png" alt="Image">
+            </div>
+          </a>
+        </div>
+        <div class="card-body pt-0 px-1 px-md-2 px-lg-3 pb-2">
+          <div class="h6 mb-2">$2.59</div>
+          <a class="hover-effect-underline fw-normal" href="#!">Soft creme cheese with greens Exquisa</a>
+          <h3 class="fs-sm lh-base mb-0">
+          </h3>
+        </div>
+        <div class="fs-xs text-body-secondary px-1 px-md-2 px-lg-3 pb-2 pb-md-3">150g</div>
+      </div>
+    </div>
+    <hr class="vr my-0 mx-2">
+    <div class="w-50">
+      <div class="card product-card h-100 bg-transparent border-0 shadow-none">
+        <div class="position-relative z-2">
+          <button type="button"
+            class="btn btn-icon btn-sm btn-secondary animate-pulse fs-sm bg-body border-0 position-absolute top-0 end-0 z-2 mt-1 mt-sm-2 me-1 me-sm-2"
+            aria-label="Add to Wishlist">
+            <i class="ci-heart animate-target"></i>
+          </button>
+          <a class="d-block p-2 p-lg-3" href="#!">
+            <div class="ratio" style="--cz-aspect-ratio: calc(160 / 191 * 100%)">
+              <img src="assets/cartzilla/img/shop/grocery/11.png" alt="Image">
+            </div>
+          </a>
+        </div>
+        <div class="card-body pt-0 px-1 px-md-2 px-lg-3 pb-2">
+          <div class="h6 mb-2">$3.40</div>
+          <h3 class="fs-sm lh-base mb-0">
+            <a class="hover-effect-underline fw-normal" href="#!">Fresh red grapefruit</a>
+          </h3>
+        </div>
+        <div class="fs-xs text-body-secondary px-1 px-md-2 px-lg-3 pb-2 pb-md-3">1kg</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product info accordion -->
+  <div class="accordion accordion-alt-icon py-2 mb-4" id="productAccordion">
+    <div class="accordion-item">
+      <h3 class="accordion-header" id="headingProductInfo">
+        <button type="button" class="accordion-button animate-underline collapsed" data-bs-toggle="collapse"
+          data-bs-target="#productInfo" aria-expanded="false" aria-controls="productInfo">
+          <span class="animate-target me-2">About this product</span>
+        </button>
+      </h3>
+      <div class="accordion-collapse collapse" id="productInfo" aria-labelledby="headingProductInfo"
+        data-bs-parent="#productAccordion">
+        <div class="accordion-body">{{ product?.description }}</div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header" id="headingProductIngredients">
+        <button type="button" class="accordion-button animate-underline collapsed" data-bs-toggle="collapse"
+          data-bs-target="#productIngredients" aria-expanded="false" aria-controls="productIngredients">
+          <span class="animate-target me-2">Ingredients</span>
+        </button>
+      </h3>
+      <div class="accordion-collapse collapse" id="productIngredients" aria-labelledby="headingProductIngredients"
+        data-bs-parent="#productAccordion">
+        <div class="accordion-body">
+          {{ product?.ingredients }}
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h3 class="accordion-header" id="headingProductCalories">
+        <button type="button" class="accordion-button animate-underline collapsed" data-bs-toggle="collapse"
+          data-bs-target="#productCalories" aria-expanded="false" aria-controls="productCalories">
+          <span class="animate-target me-2">How to use</span>
+        </button>
+      </h3>
+      <div class="accordion-collapse collapse" id="productCalories" aria-labelledby="headingProductCalories"
+        data-bs-parent="#productAccordion">
+        <div class="accordion-body">{{ product?.calories }}</div>
+      </div>
+    </div>
+   
+  </div>
+
+  <div class="d-flex align-items-center position-relative text-dark-emphasis">
+    <i class="ci-edit fs-lg me-2"></i>
+    <a class="stretched-link fs-sm text-dark-emphasis" href="#!">Report incorrect product information</a>
+  </div>
+</div>

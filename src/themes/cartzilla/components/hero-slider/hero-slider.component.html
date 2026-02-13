@@ -1,0 +1,60 @@
+<section class="position-relative">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+    <div class="alert alert-warning text-center">
+      {{ error }}
+    </div>
+  </div>
+
+  <!-- Slider Content -->
+  <div *ngIf="!isLoading && !error" class="swiper position-absolute top-0 start-0 w-100 h-100" data-swiper='{
+    "effect": "fade",
+    "loop": true,
+    "speed": 400,
+    "pagination": {
+      "el": ".swiper-pagination",
+      "clickable": true
+    },
+    "autoplay": {
+      "delay": 5500,
+      "disableOnInteraction": false
+    }
+  }' data-bs-theme="dark">
+    <div class="swiper-wrapper">
+      <!-- Dynamic Slides -->
+      <div *ngFor="let slide of slides" class="swiper-slide" [style.background-color]="slide.background">
+        <div class="position-absolute d-flex align-items-center w-100 h-100 z-2">
+          <div class="container mt-lg-n4">
+            <div class="row">
+              <div class="col-12 col-sm-10 col-md-7 col-lg-6">
+                <p class="fs-sm text-white mb-lg-4" [style.color]="slide.textColor">{{ slide.description }}</p>
+                <h2 class="display-4 pb-2 pb-md-3 pb-lg-4" [style.color]="slide.textColor">{{ slide.title }}</h2>
+                <a class="btn btn-lg btn-outline-light rounded-pill" [routerLink]="slide.link">
+                  {{ slide.buttonText }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <img [src]="slide.image" class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover rtl-flip" [alt]="slide.title" (error)="slide.image = 'assets/cartzilla/img/home/grocery/hero-slider/01.jpg'">
+      </div>
+    </div>
+
+    <!-- Slider pagination (Bullets) -->
+    <div class="swiper-pagination pb-sm-2"></div>
+  </div>
+  
+  <!-- Responsive height spacers -->
+  <div class="d-md-none" style="height: 380px"></div>
+  <div class="d-none d-md-block d-lg-none" style="height: 420px"></div>
+  <div class="d-none d-lg-block d-xl-none" style="height: 500px"></div>
+  <div class="d-none d-xl-block d-xxl-none" style="height: 560px"></div>
+  <div class="d-none d-xxl-block" style="height: 624px"></div>
+</section>

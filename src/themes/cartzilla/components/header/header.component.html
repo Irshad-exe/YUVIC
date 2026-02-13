@@ -1,0 +1,377 @@
+<!-- Shopping cart offcanvas -->
+<div class="offcanvas offcanvas-end pb-sm-2 px-sm-2" id="shoppingCart" tabindex="-1" aria-labelledby="shoppingCartLabel"
+  style="width: 500px">
+  <!-- Header -->
+  <div class="offcanvas-header flex-column align-items-start py-3 pt-lg-4">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-3 mb-lg-4">
+      <h4 class="offcanvas-title" id="shoppingCartLabel">Shopping cart</h4>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="alert alert-success text-dark-emphasis fs-sm border-0 rounded-4 mb-0" role="alert"
+      *ngIf="hasFreeDelivery()">
+      {{ getDeliveryMessage() }}
+    </div>
+    <div class="alert alert-info text-dark-emphasis fs-sm border-0 rounded-4 mb-0" role="alert"
+      *ngIf="!hasFreeDelivery()">
+      {{ getDeliveryMessage() }}
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div class="offcanvas-body d-flex flex-column gap-4 pt-2">
+    <!-- Dynamic Cart Items -->
+    <div class="d-flex align-items-center" *ngFor="let item of cart.items">
+      <a class="position-relative flex-shrink-0" [routerLink]="['/product', item.product_id]">
+        <span class="badge text-bg-danger position-absolute top-0 start-0 z-2 mt-0 ms-0" *ngIf="item.discount">
+          -${{item.discount}}
+        </span>
+        <img [src]="item.product_image" width="110" [alt]="item.product_name">
+      </a>
+      <div class="w-100 ps-3">
+        <h5 class="fs-sm fw-medium lh-base mb-2">
+          <a class="hover-effect-underline" [routerLink]="['/product', item.product_id]">{{item.product_name}}</a>
+        </h5>
+        <div class="h6 pb-1 mb-2">${{item.price}}</div>
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="count-input rounded-pill">
+            <button type="button" class="btn btn-icon btn-sm" (click)="updateQuantity(item, -1)"
+              aria-label="Decrement quantity">
+              <i class="ci-minus"></i>
+            </button>
+            <input type="number" class="form-control form-control-sm" [value]="item.quantity" readonly>
+            <button type="button" class="btn btn-icon btn-sm" (click)="updateQuantity(item, 1)"
+              aria-label="Increment quantity">
+              <i class="ci-plus"></i>
+            </button>
+          </div>
+          <button type="button" class="btn-close fs-sm" (click)="removeItem(item.id)" data-bs-toggle="tooltip"
+            data-bs-custom-class="tooltip-sm" data-bs-title="Remove" aria-label="Remove from cart"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty Cart State -->
+    <div class="text-center py-4" *ngIf="cart.items.length === 0">
+      <i class="ci-shopping-cart fs-1 text-body-secondary mb-3"></i>
+      <p class="text-body-secondary mb-0">Your cart is empty</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="offcanvas-header flex-column align-items-start" *ngIf="cart.items.length > 0">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-3 mb-md-4">
+      <span class="text-light-emphasis">Subtotal:</span>
+      <span class="h6 mb-0">${{cart.subtotal}}</span>
+    </div>
+    <div class="d-flex w-100 gap-3">
+      <a class="btn btn-lg btn-secondary w-100 rounded-pill" routerLink="/cart">View cart</a>
+      <a class="btn btn-lg btn-primary w-100 rounded-pill" routerLink="/checkout">Checkout</a>
+    </div>
+  </div>
+</div>
+
+<!-- Delivery options offcanvas -->
+<div class="offcanvas offcanvas-end pb-sm-2 px-sm-2" id="deliveryOptions" tabindex="-1"
+  aria-labelledby="deliveryOptionsLabel" style="width: 500px">
+  <!-- Header with nav tabs -->
+  <div class="offcanvas-header flex-column align-items-start py-3 pt-lg-4">
+    <div class="d-flex align-items-center justify-content-between w-100 pb-xl-1 mb-4">
+      <h4 class="offcanvas-title" id="deliveryOptionsLabel">Delivery options</h4>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <ul class="nav nav-pills nav-justified w-100" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" [class.active]="activeDeliveryTab === 'delivery'"
+          (click)="setActiveTab('delivery')" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#delivery-tab-pane"
+          role="tab" aria-controls="delivery-tab-pane" [attr.aria-selected]="activeDeliveryTab === 'delivery'">
+          <i class="ci-shopping-bag fs-base ms-n1 me-2"></i>
+          Delivery
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" [class.active]="activeDeliveryTab === 'pickup'"
+          (click)="setActiveTab('pickup')" id="pickup-tab" data-bs-toggle="tab" data-bs-target="#pickup-tab-pane"
+          role="tab" aria-controls="pickup-tab-pane" [attr.aria-selected]="activeDeliveryTab === 'pickup'">
+          <i class="ci-box fs-base ms-n1 me-2"></i>
+          Pickup
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="offcanvas-body tab-content py-2 py-sm-3">
+    <!-- Delivery tab -->
+    <div class="tab-pane fade" [class.show.active]="activeDeliveryTab === 'delivery'" id="delivery-tab-pane"
+      role="tabpanel" aria-labelledby="delivery-tab">
+      <!-- Dynamic Delivery Addresses -->
+      <div class="mt-n3">
+        <div class="form-check border-bottom py-4 m-0" *ngFor="let address of deliveryAddresses">
+          <input type="radio" class="form-check-input" [id]="'address-' + address.id" [value]="address.id"
+            [(ngModel)]="selectedAddressId" name="delivery-address">
+          <label [for]="'address-' + address.id" class="form-check-label text-dark-emphasis fw-semibold">
+            {{address.address_line}}, {{address.city}}, {{address.state}} {{address.postal_code}}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pickup tab -->
+    <div class="tab-pane fade" [class.show.active]="activeDeliveryTab === 'pickup'" id="pickup-tab-pane" role="tabpanel"
+      aria-labelledby="pickup-tab">
+      <!-- Pickup stores would go here -->
+      <div class="text-center py-4">
+        <p class="text-body-secondary">Pickup stores functionality coming soon</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="offcanvas-header">
+    <button type="button" class="btn btn-lg btn-primary w-100 rounded-pill" data-bs-dismiss="offcanvas">Confirm
+      address</button>
+  </div>
+</div>
+
+<!-- Site menu offcanvas -->
+<nav class="offcanvas offcanvas-start" id="navbarNav" tabindex="-1" aria-labelledby="navbarNavLabel">
+  <div class="offcanvas-header py-3">
+    <h5 class="offcanvas-title" id="navbarNavLabel">Browse Yuvic</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body pt-0 pb-3">
+    <!-- Navigation Menu -->
+    <div class="accordion" id="navigation">
+      
+      <!-- Home -->
+      <div class="border-bottom py-3">
+        <a class="nav-link d-flex align-items-center fw-medium p-0" routerLink="/" data-bs-dismiss="offcanvas">
+          <i class="ci-home fs-lg me-2"></i>
+          <span>Home</span>
+        </a>
+      </div>
+
+      <!-- Categories with Dropdown -->
+      <div class="accordion-item border-0">
+        <div class="accordion-header" id="headingCategories">
+          <button type="button" class="accordion-button animate-underline fw-medium collapsed py-3"
+            data-bs-toggle="collapse" data-bs-target="#categoriesMenu" aria-expanded="false"
+            aria-controls="categoriesMenu">
+            <i class="ci-grid fs-lg me-2"></i>
+            <span class="d-block animate-target">Categories</span>
+          </button>
+        </div>
+        <div class="accordion-collapse collapse" id="categoriesMenu" aria-labelledby="headingCategories"
+          data-bs-parent="#navigation">
+          <div class="accordion-body pb-3">
+            <ul class="nav flex-column gap-2">
+              <li>
+                <a class="nav-link p-2" routerLink="/shop-category/body-wash" data-bs-dismiss="offcanvas">
+                  Body wash
+                </a>
+              </li>
+              <li>
+                <a class="nav-link p-2" routerLink="/shop-category/face-pack" data-bs-dismiss="offcanvas">
+                  Face pack
+                </a>
+              </li>
+              <li>
+                <a class="nav-link p-2" routerLink="/shop-category/conditioner" data-bs-dismiss="offcanvas">
+                  Conditioner
+                </a>
+              </li>
+              <li>
+                <a class="nav-link p-2" routerLink="/shop-category/shampoo" data-bs-dismiss="offcanvas">
+                  Shampoo
+                </a>
+              </li>
+              <li>
+                <a class="nav-link p-2" routerLink="/shop-category/acv-tablet" data-bs-dismiss="offcanvas">
+                  ACV TABLET
+                </a>
+              </li>
+              <li>
+                <a class="nav-link p-2" routerLink="/shop-category/body-lotion" data-bs-dismiss="offcanvas">
+                  Body lotion
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combo -->
+      <div class="border-bottom py-3">
+        <a class="nav-link d-flex align-items-center fw-medium p-0" routerLink="/combo" data-bs-dismiss="offcanvas">
+          <i class="ci-gift fs-lg me-2"></i>
+          <span>Combo</span>
+        </a>
+      </div>
+
+      <!-- About Us -->
+      <div class="border-bottom py-3">
+        <a class="nav-link d-flex align-items-center fw-medium p-0" routerLink="/cms/aboutus" data-bs-dismiss="offcanvas">
+          <i class="ci-info-circle fs-lg me-2"></i>
+          <span>About Us</span>
+        </a>
+      </div>
+
+      <!-- Contact Us -->
+      <div class="border-bottom py-3">
+        <a class="nav-link d-flex align-items-center fw-medium p-0" routerLink="/contact" data-bs-dismiss="offcanvas">
+          <i class="ci-mail fs-lg me-2"></i>
+          <span>Contact Us</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<!-- Main Header -->
+<header class="navbar navbar-expand navbar-sticky sticky-top d-block bg-body z-fixed py-1 py-lg-0 py-xl-1 px-0"
+  data-sticky-element>
+  <div class="container justify-content-start py-2 py-lg-3">
+    <!-- Offcanvas menu toggler (Hamburger) -->
+    <button type="button" class="navbar-toggler d-block flex-shrink-0 me-3 me-sm-4" data-bs-toggle="offcanvas"
+      data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar brand (Logo) -->
+    <a class="navbar-brand fs-2 p-0 pe-lg-2 pe-xxl-0 me-0 me-sm-3 me-md-4 me-xxl-5" routerLink="/">Yuvic</a>
+
+    <!-- Categories dropdown visible on screens > 991px wide (lg breakpoint) -->
+    <div class="dropdown d-none d-lg-block w-100 me-4" style="max-width: 200px">
+      <button type="button" class="btn btn-lg btn-secondary w-100 border-0 rounded-pill" data-bs-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="ci-grid fs-lg me-2 ms-n1"></i>
+        Categories
+        <i class="ci-chevron-down fs-lg me-2 ms-auto me-n1"></i>
+      </button>
+      <div class="dropdown-menu rounded-4 p-4" style="--cz-dropdown-spacer: .75rem; margin-left: -75px; min-width: 800px; max-height: 600px; overflow-y: auto;">
+        <div class="row row-cols-3 g-4">
+          <div class="col" *ngFor="let parent of getParentCategories()">
+            <h6 class="mb-2">
+              <a class="text-dark  text-decoration-none" [routerLink]="['/shop-category', parent.id]">
+                {{parent.name}}
+              </a>
+            </h6>
+            <ul class="nav flex-column gap-1" *ngIf="getChildCategories(parent.id).length > 0">
+              <li *ngFor="let child of getChildCategories(parent.id)">
+                <a class="nav-link p-1 fs-sm text-body-secondary" [routerLink]="['/shop-category', child.id]">
+                  {{child.name}}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search bar visible on screens > 768px wide (md breakpoint) -->
+    <div class="position-relative w-100 d-none d-md-block me-3 me-xl-4">
+      <input type="search" class="form-control form-control-lg rounded-pill" placeholder="Search for products"
+        aria-label="Search" #searchInput (keyup.enter)="onSearch(searchInput.value)">
+      <button type="button"
+        class="btn btn-icon btn-ghost fs-lg btn-secondary text-bo border-0 position-absolute top-0 end-0 rounded-circle mt-1 me-1"
+        aria-label="Search button" (click)="onSearch(searchInput.value)">
+        <i class="ci-search"></i>
+      </button>
+    </div>
+
+    <!-- Delivery options toggle visible on screens > 1200px wide (xl breakpoint) -->
+    <div class="nav me-4 me-xxl-5 d-none d-xl-block">
+      <a class="nav-link flex-column align-items-start animate-underline p-0" href="#deliveryOptions"
+        data-bs-toggle="offcanvas" aria-controls="deliveryOptions">
+        <div class="h6 fs-sm mb-0">Delivery</div>
+        <div class="d-flex align-items-center fs-sm fw-normal text-body">
+          <span class="animate-target text-nowrap">Set your address</span>
+          <i class="ci-chevron-down fs-base ms-1"></i>
+        </div>
+      </a>
+    </div>
+
+    <!-- Button group -->
+    <div class="d-flex align-items-center gap-md-1 gap-lg-2 ms-auto">
+      <!-- Theme switcher, search toggle, delivery options, account, and cart buttons remain the same -->
+      <!-- Theme switcher -->
+      <button type="button" class="btn btn-icon fs-xl btn-outline-secondary border-0 rounded-circle animate-scale me-2"
+        (click)="toggleTheme()" aria-label="Toggle theme">
+        <i class="ci-sun theme-icon-active animate-target"></i>
+      </button>
+
+      <!-- Account dropdown -->
+      <div class="dropdown">
+        <a class="btn btn-icon fs-xl btn-outline-secondary border-0 rounded-circle animate-scale" href="#" role="button"
+          data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account">
+          <i class="ci-user animate-target"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li *ngIf="!user.is_logged_in">
+            <a class="dropdown-item" routerLink="/signin">
+              <i class="ci-log-in fs-base opacity-75 me-2"></i>Sign In
+            </a>
+          </li>
+          <li *ngIf="!user.is_logged_in">
+            <a class="dropdown-item" routerLink="/signup">
+              <i class="ci-user-plus fs-base opacity-75 me-2"></i>Sign Up
+            </a>
+          </li>
+          <li *ngIf="user.is_logged_in">
+            <div class="dropdown-header">
+              <div class="fw-medium">{{user.name}}</div>
+              <div class="fs-xs text-muted text-truncate" style="max-width: 10rem;">{{user.email}}</div>
+            </div>
+          </li>
+          <li *ngIf="user.is_logged_in">
+            <a class="dropdown-item" routerLink="/profile">
+              <i class="ci-user fs-base opacity-75 me-2"></i>My Profile
+            </a>
+          </li>
+          <li *ngIf="user.is_logged_in">
+            <a class="dropdown-item" routerLink="/my-orders">
+              <i class="ci-shopping-bag fs-base opacity-75 me-2"></i>My Orders
+            </a>
+          </li>
+          <li *ngIf="user.is_logged_in">
+            <hr class="dropdown-divider">
+          </li>
+          <li *ngIf="user.is_logged_in">
+            <a class="dropdown-item" href="#" (click)="logout()">
+              <i class="ci-log-out fs-base opacity-75 me-2"></i>Sign Out
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Wishlist button -->
+      <a class="btn btn-icon fs-xl btn-outline-secondary border-0 rounded-circle animate-scale me-2"
+        routerLink="/wishlist" aria-label="Wishlist">
+        <i class="ci-heart animate-target"></i>
+      </a>
+
+      <!-- Cart button with dynamic count -->
+      <button type="button"
+        class="btn btn-icon fs-xl btn-outline-secondary position-relative border-0 rounded-circle animate-scale"
+        data-bs-toggle="offcanvas" data-bs-target="#shoppingCart" aria-controls="shoppingCart"
+        aria-label="Shopping cart">
+        <span class="position-absolute top-0 start-100 badge fs-xs text-bg-primary rounded-pill ms-n3 z-2"
+          style="--cz-badge-padding-y: .25em; --cz-badge-padding-x: .42em" *ngIf="cart.total_items > 0">
+          {{cart.total_items}}
+        </span>
+        <i class="ci-shopping-cart animate-target"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search collapse available on screens < 768px wide (md breakpoint) -->
+  <div class="collapse d-md-none" [class.show]="!isSearchCollapsed" id="searchBar">
+    <div class="container pt-2 pb-3">
+      <div class="position-relative">
+        <i class="ci-search position-absolute top-50 translate-middle-y d-flex fs-lg ms-3"></i>
+        <input type="search" class="form-control form-icon-start rounded-pill" placeholder="Search for products"
+          #mobileSearchInput (keyup.enter)="onSearch(mobileSearchInput.value)">
+      </div>
+    </div>
+  </div>
+</header>

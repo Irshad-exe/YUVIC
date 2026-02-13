@@ -1,0 +1,7 @@
+.angular
+node_modules
+dist
+backend/api-gateway/node_modules
+backend/auth-service/node_modules
+
+

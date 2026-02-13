@@ -1,0 +1,110 @@
+.file-drop-area {
+  border: 1px dashed #7c7db3;
+  border-radius: 3px;
+  position: relative;
+  max-width: 100%;
+  margin-top: 5px;
+  padding: 26px 20px 30px;
+  transition: 0.2s;
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.file-msg {
+  display: inline-block;
+  margin-left: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #5b5bff;
+}
+
+/* CKEditor Styles */
+.ckeditor-container {
+  margin-bottom: 16px;
+  
+  .ckeditor-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.6);
+    
+    .required-asterisk {
+      color: #f44336;
+    }
+  }
+  
+  .ck.ck-editor {
+    border-radius: 4px;
+    overflow: hidden;
+    
+    .ck.ck-toolbar {
+      border: 1px solid #ccc;
+      border-bottom: none;
+      background: #f8f9fa;
+    }
+    
+    .ck.ck-content {
+      border: 1px solid #ccc;
+      border-top: none;
+      min-height: 200px;
+      font-size: 14px;
+    }
+    
+    .ck.ck-focused {
+      border-color: #3f51b5 !important;
+      box-shadow: 0 0 0 1px #3f51b5 !important;
+    }
+  }
+  
+  .editor-loading {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 50px 20px;
+    text-align: center;
+    background: #f9f9f9;
+    color: #666;
+    font-style: italic;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .fallback-textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 200px;
+    
+    &:focus {
+      outline: none;
+      border-color: #3f51b5;
+      box-shadow: 0 0 0 1px #3f51b5;
+    }
+  }
+  
+  .error-message {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 4px;
+    padding: 0 8px;
+  }
+}
+
+/* Material form field integration for other fields */
+.mat-form-field-appearance-outline {
+  width: 100%;
+}

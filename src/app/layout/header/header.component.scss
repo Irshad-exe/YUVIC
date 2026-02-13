@@ -1,0 +1,106 @@
+/* Style for the groups dropdown */
+.collapse-menu-icon {
+  margin-right: 15px;
+
+  .currency-selector-container {
+    margin-left: auto;
+    padding: 0 15px;
+  }
+
+  .navbar-dropdown {
+    min-width: 220px;
+    margin: 0 8px;
+    .mat-form-field-wrapper {
+      padding-bottom: 0; // remove extra bottom space in navbar
+    }
+    .mat-select {
+      line-height: 40px; // vertically center
+    }
+  }
+  
+  .example-full-width {
+    width: 200px;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+
+    .mat-form-field-outline {
+      background-color: white;
+      border-radius: 4px;
+    }
+
+    .mat-select-arrow-wrapper {
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Make the dropdown match your theme */
+.mat-select-panel {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  .mat-option {
+    color: #333;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+  }
+}
+
+.mat-mdc-form-field {
+  flex-direction: inherit;
+}
+
+.currency-selector-container {
+  margin-left: auto;
+  padding: 0 15px;
+}
+
+.notification-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.nfc-close {
+  margin-left: auto;
+  cursor: pointer;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.user-menu-icons {
+  width: 16px;
+  height: 16px;
+  color: #888;
+  transition: color 0.2s ease-in-out;
+}
+
+.user-menu-icons:hover {
+  color: red;
+}
+
+.notification-view {
+  position: absolute;
+  top: 0px;
+  right: -3px;
+  text-align: center;
+  font-size: 10px;
+  padding: 0;
+  line-height: 20px;
+  border-radius: 100px;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border: none;
+  color: #fff;
+  box-shadow: none;
+  font-weight: 600;
+  background-color: red;
+}

@@ -1,0 +1,175 @@
+<!-- form-dialog.component.html -->
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">{{dialogTitle}}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" aria-label="Close dialog" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="sliderForm" (ngSubmit)="submit()">
+
+      <!-- Image Upload Section -->
+      <h4 class="mt-2 mb-3">Slider Image</h4>
+      <div class="row">
+        <div class="col-xl-12 mb-4">
+          <div class="file-upload-container">
+            <!-- Image Preview -->
+            <div class="image-preview-container mb-3" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Slider Preview" class="image-preview">
+              <button type="button" mat-icon-button class="remove-image-btn" (click)="removeImage()" matTooltip="Remove Image">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+
+            <!-- File Upload Area - Made completely clickable -->
+            <div class="file-drop-area" 
+                 [class.has-preview]="imagePreview"
+                 (click)="fileInput.click()"
+                 (drop)="onFileDrop($event)"
+                 (dragover)="onDragOver($event)"
+                 (dragleave)="onDragLeave($event)">
+              <input type="file" class="file-input" 
+                     (change)="onFileSelected($event)" 
+                     accept="image/*" 
+                     #fileInput>
+              <div class="file-upload-content">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <p class="file-msg">
+                  {{ imagePreview ? 'Change Image' : 'Click anywhere or drag & drop to upload image' }}
+                </p>
+                <p class="file-support">Supports: JPG, PNG, GIF • Max: 5MB</p>
+                <button type="button" mat-stroked-button color="primary" (click)="$event.stopPropagation(); fileInput.click()">
+                  <mat-icon>folder_open</mat-icon>
+                  Or Select File
+                </button>
+              </div>
+            </div>
+
+            <!-- Upload Progress -->
+            <div *ngIf="isUploading" class="upload-progress">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              <p class="upload-text">Uploading image...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slider Information Section -->
+      <h4 class="mt-2 mb-3">Slider Information</h4>
+      <div class="row">
+        <!-- Title -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title">
+            <mat-icon matSuffix>title</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Subtitle -->
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Subtitle</mat-label>
+            <input matInput formControlName="subtitle">
+            <mat-icon matSuffix>subtitles</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Status -->
+        <div class="col-xl-4 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="is_active">
+              <mat-option [value]="true">Active</mat-option>
+              <mat-option [value]="false">Inactive</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>toggle_on</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Sort Order -->
+        <div class="col-xl-4 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Sort Order</mat-label>
+            <input matInput type="number" formControlName="sort_order" min="0">
+            <mat-icon matSuffix>sort</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="row">
+        <div class="col-xl-12 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3" placeholder="Enter slider description..."></textarea>
+            <mat-icon matSuffix>description</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Button Information -->
+      <h4 class="mt-4 mb-3">Button Information</h4>
+      <div class="row">
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Button Text</mat-label>
+            <input matInput formControlName="button_text" placeholder="e.g., Shop Now">
+            <mat-icon matSuffix>smart_button</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Button URL</mat-label>
+            <input matInput formControlName="button_url" placeholder="https://example.com/shop">
+            <mat-icon matSuffix>link</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Styling Section -->
+      <h4 class="mt-4 mb-3">Styling</h4>
+      <div class="row">
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Background Color</mat-label>
+            <input matInput formControlName="background_color" placeholder="#6dafca">
+            <mat-icon matSuffix>format_color_fill</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xl-6 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Text Color</mat-label>
+            <input matInput formControlName="text_color" placeholder="#ffffff">
+            <mat-icon matSuffix>format_color_text</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Form Buttons -->
+      <div class="row mt-4">
+        <div class="col-xl-12 mb-2">
+          <div class="example-button-row">
+            <button mat-flat-button color="primary" type="submit" [disabled]="!sliderForm.valid || isUploading">
+              <mat-icon *ngIf="isUploading">hourglass_empty</mat-icon>
+              <span>
+                {{ isUploading ? 'Uploading...' : (action === 'edit' ? 'Update Slider' : 'Add Slider') }}
+              </span>
+            </button>
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1" type="button" [disabled]="isUploading">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

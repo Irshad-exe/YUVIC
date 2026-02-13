@@ -1,0 +1,80 @@
+<!-- Cartzilla Header with Shopping Cart and Delivery Options -->
+<app-cartzilla-header></app-cartzilla-header>
+
+<!-- Categories Navigation -->
+<app-cartzilla-categories></app-cartzilla-categories>
+
+<!-- Page content -->
+<main class="content-wrapper">
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="container text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading product details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="container text-center py-5">
+    <i class="ci-close-circle display-4 text-danger mb-3"></i>
+    <h3 class="h4">Error Loading Product</h3>
+    <p class="text-body-secondary">{{ error }}</p>
+    <a routerLink="/catalog" class="btn btn-primary">Back to Catalog</a>
+  </div>
+
+  <!-- Product Content -->
+  <div *ngIf="!loading && !error && product">
+
+    <!-- Breadcrumb -->
+    <app-product-detail-breadcrumb [productName]="product.name" [category]="product.category"
+      [categoryId]="product.category_id || null">
+    </app-product-detail-breadcrumb>
+
+    <!-- Product gallery + Product details -->
+    <section class="container pt-md-4 pb-5 mt-md-2 mt-lg-3 mb-2 mb-sm-3 mb-lg-4 mb-xl-5">
+      <div class="row align-items-start">
+
+        <!-- Product gallery -->
+        <div class="col-md-6 col-lg-7 sticky-md-top z-1 mb-4 mb-md-0" style="margin-top: -120px">
+          <app-product-detail-gallery [images]="product.images" [productId]="productId">
+          </app-product-detail-gallery>
+        </div>
+
+        <!-- Product details -->
+        <div class="col-md-6 col-lg-5 position-relative">
+          <app-product-detail-info [product]="product" (addToCartEvent)="addToCart($event)">
+          </app-product-detail-info>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="container pb-5 mb-2 mb-sm-3 mb-lg-4 mb-xl-5">
+      <app-product-reviews [productId]="productId"></app-product-reviews>
+    </section>
+
+    <!-- Related products -->
+    <app-product-detail-related [productId]="productId" [categoryId]="product.category_id">
+    </app-product-detail-related>
+
+  </div>
+</main>
+
+<!-- Footer -->
+<app-cartzilla-footer></app-cartzilla-footer>
+
+<!-- Back to top button -->
+<div class="floating-buttons position-fixed top-50 end-0 z-sticky me-3 me-xl-4 pb-4">
+  <a class="btn-scroll-top btn btn-sm bg-body border-0 rounded-pill shadow animate-slide-end" href="#top">
+    Top
+    <i class="ci-arrow-right fs-base ms-1 me-n1 animate-target"></i>
+    <span class="position-absolute top-0 start-0 w-100 h-100 border rounded-pill z-0"></span>
+    <svg class="position-absolute top-0 start-0 w-100 h-100 z-1" viewBox="0 0 62 32" fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <rect x=".75" y=".75" width="60.5" height="30.5" rx="15.25" stroke="currentColor" stroke-width="1.5"
+        stroke-miterlimit="10" />
+    </svg>
+  </a>
+</div>

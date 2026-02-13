@@ -1,0 +1,86 @@
+<!-- <section class="border-top">
+  <div class="container py-lg-1">
+    <div class="overflow-auto" data-simplebar>
+      <div class="nav flex-nowrap justify-content-between gap-4 py-2">
+        <a *ngFor="let category of categories" 
+           class="nav-link align-items-center animate-underline gap-2 p-0" 
+           [routerLink]="category.link">
+          <span class="d-flex align-items-center justify-content-center bg-body-tertiary rounded-circle" 
+                style="width: 40px; height: 40px">
+            <img [src]="category.image" [alt]="category.name" width="30" *ngIf="category.image">
+            <i [class]="category.icon" class="text-primary fs-xl" *ngIf="category.icon"></i>
+          </span>
+          <span class="d-block animate-target fw-semibold text-nowrap ms-1">{{ category.name }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="border-top" *ngIf="featuredCategories.length > 0">
+  <div class="container py-lg-1">
+    <div class="overflow-auto" data-simplebar>
+      <div class="nav flex-nowrap justify-content-between gap-4 py-2">
+        <a *ngFor="let category of featuredCategories" 
+           class="nav-link align-items-center animate-underline gap-2 p-0" 
+           [routerLink]="category.link"
+           [title]="category.name">
+          
+          <!-- Category Icon/Image Container -->
+          <span class="d-flex align-items-center justify-content-center bg-body-tertiary rounded-circle" 
+                style="width: 40px; height: 40px">
+            
+            <!-- Show image if available -->
+            <img [src]="category.image_url" 
+                 [alt]="category.name" 
+                 width="30" 
+                 height="30"
+                 class="rounded-circle"
+                 *ngIf="category.image_url"
+                 onerror="this.style.display='none'">
+            
+            <!-- Show icon only if no image -->
+            <i [class]="category.icon || 'ci-grid'" 
+               class="text-primary fs-xl" 
+               *ngIf="!category.image_url"></i>
+          </span>
+          
+          <!-- Category Name -->
+          <span class="d-block animate-target fw-semibold text-nowrap ms-1" 
+                [class.text-primary]="category.is_special">
+            {{ category.name }}
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Fallback section if no categories are available -->
+<section class="border-top" *ngIf="featuredCategories.length === 0">
+  <div class="container py-lg-1">
+    <div class="overflow-auto" data-simplebar>
+      <div class="nav flex-nowrap justify-content-between gap-4 py-2">
+        <!-- Default categories when no data is available -->
+        <a class="nav-link align-items-center animate-underline gap-2 p-0" routerLink="/shop-category">
+          <span class="d-flex align-items-center justify-content-center bg-body-tertiary rounded-circle" 
+                style="width: 40px; height: 40px">
+            <i class="ci-percent text-primary fs-xl"></i>
+          </span>
+          <span class="d-block animate-target fw-semibold text-nowrap ms-1">Combo</span>
+        </a>
+        
+        <a class="nav-link align-items-center animate-underline gap-2 p-0" routerLink="/shop-category">
+          <span class="d-flex align-items-center justify-content-center bg-body-tertiary rounded-circle" 
+                style="width: 40px; height: 40px">
+            <img src="assets/cartzilla/img/mega-menu/grocery/th01.png" alt="Vegetables" width="30">
+          </span>
+          <span class="d-block animate-target fw-semibold text-nowrap ms-1">Vegetables</span>
+        </a>
+        
+        <!-- Add more default categories as needed -->
+      </div>
+    </div>
+  </div>
+</section>

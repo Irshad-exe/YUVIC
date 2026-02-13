@@ -1,0 +1,109 @@
+<section class="container pt-xl-2 pb-5 mb-2 mb-sm-3 mb-lg-4 mb-xl-5">
+  <div class="row">
+    <!-- Banner -->
+    <div class="col-sm-5 col-md-4 col-lg-3 mb-5 mb-sm-0">
+      <div class="pe-lg-2 pe-xl-4">
+        <div class="rounded-4 overflow-hidden" style="background-color: #a6cddc" data-bs-theme="light">
+          <div class="pt-3 px-3 mt-3 mx-3">
+            <h4 class="mb-2 mb-xl-3">Make breakfast healthy and easy</h4>
+            <div class="nav">
+              <a class="nav-link animate-underline stretched-link px-0" routerLink="/shop">
+                <span class="animate-target">Shop now</span>
+                <i class="ci-chevron-right fs-base mt-1 ms-1"></i>
+              </a>
+            </div>
+          </div>
+          <div class="ratio mt-n2" style="--cz-aspect-ratio: calc(240 / 282 * 100%)">
+            <img src="assets/cartzilla/img/shop/grocery/banner.jpg" alt="Banner">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Special products carousel -->
+    <div class="col-sm-7 col-md-8 col-lg-9">
+      <div class="d-flex align-items-center justify-content-between border-bottom pb-3 pb-md-4 mb-3 mb-lg-4">
+        <h2 class="h3 mb-0">Special products</h2>
+        <div class="nav ms-3">
+          <a class="nav-link animate-underline px-0 py-2" routerLink="/shop">
+            <span class="animate-target text-nowrap">View all</span>
+            <i class="ci-chevron-right fs-base ms-1"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="swiper" data-swiper='{
+        "slidesPerView": 2,
+        "spaceBetween": 24,
+        "pagination": {
+          "el": ".swiper-pagination",
+          "clickable": true
+        },
+        "breakpoints": {
+          "840": {
+            "slidesPerView": 3
+          },
+          "992": {
+            "slidesPerView": 4
+          }
+        }
+      }'>
+        <div class="swiper-wrapper">
+          <div *ngFor="let product of specialProducts" class="swiper-slide h-auto">
+            <div class="card product-card h-100 bg-transparent border-0 shadow-none">
+              <div class="position-relative z-2">
+                <button type="button" 
+                        class="btn btn-icon btn-sm btn-secondary animate-pulse fs-sm bg-body border-0 position-absolute top-0 end-0 z-2 mt-1 mt-sm-2 me-1 me-sm-2" 
+                        (click)="toggleFavorite(product)"
+                        [attr.aria-label]="product.isFavorite ? 'Remove from wishlist' : 'Add to wishlist'">
+                  <i [class]="product.isFavorite ? 'ci-heart-fill text-danger' : 'ci-heart'"></i>
+                </button>
+                
+                <a class="d-block p-2 p-lg-3" [routerLink]="['/product', product.id]">
+                  <div class="ratio" style="--cz-aspect-ratio: calc(160 / 191 * 100%)">
+                    <img [src]="product.image" [alt]="product.name">
+                  </div>
+                </a>
+
+                <!-- Quantity controls -->
+                <div class="position-absolute w-100 start-0 bottom-0">
+                  <div class="d-flex justify-content-end px-2 px-lg-3 pb-2 pb-lg-3">
+                    <div class="count-input count-input-collapsible collapsed justify-content-between w-100 bg-transparent border-0 rounded-2">
+                      <button type="button" class="btn btn-icon btn-sm btn-primary" 
+                              (click)="decrementQuantity(product)" 
+                              [disabled]="product.quantity <= 0"
+                              aria-label="Decrement quantity">
+                        <i class="ci-minus fs-sm"></i>
+                      </button>
+                      <input type="number" class="form-control form-control-sm bg-primary text-white w-100" 
+                             [value]="product.quantity" min="0" readonly>
+                      <button type="button" class="product-card-button btn btn-icon btn-sm btn-secondary ms-auto" 
+                              (click)="incrementQuantity(product)"
+                              aria-label="Increment quantity">
+                        <span>{{ product.quantity }}</span>
+                        <i class="ci-plus fs-sm"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-body pt-0 px-1 px-md-2 px-lg-3 pb-2">
+                <div class="h6 mb-2">${{ product.price }}</div>
+                <h3 class="fs-sm lh-base mb-0">
+                  <a class="hover-effect-underline fw-normal" [routerLink]="['/product', product.id]">
+                    {{ product.name }}
+                  </a>
+                </h3>
+              </div>
+              <div class="fs-xs text-body-secondary px-1 px-md-2 px-lg-3 pb-2 pb-md-3">{{ product.weight }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slider pagination -->
+        <div class="swiper-pagination position-static mt-3 mt-sm-4"></div>
+      </div>
+    </div>
+  </div>
+</section>

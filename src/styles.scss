@@ -1,0 +1,28 @@
+/* Your existing Material styles remain unchanged */
+
+/* Cartzilla theme isolation */
+app-landing {
+  // Import Cartzilla base styles
+  @import 'assets/cartzilla/css/theme.min.css';
+
+  // Reset Material styles that might conflict
+  .mat-typography {
+    font-family: inherit;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: inherit;
+      font-weight: inherit;
+      margin: 0;
+    }
+  }
+}
+
+/* Ensure admin routes use Material theme */
+app-main-layout {
+  // Your existing admin styles
+}

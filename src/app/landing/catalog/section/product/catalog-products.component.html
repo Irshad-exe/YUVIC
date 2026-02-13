@@ -1,0 +1,150 @@
+<!-- Sorting -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <div class="fs-sm text-body-emphasis text-nowrap mb-2 mb-sm-0">
+    Found <span class="fw-semibold">{{totalProducts}}</span> items
+    <span *ngIf="loading" class="ms-2">
+      <i class="ci-loading"></i> Loading...
+    </span>
+  </div>
+  <div class="d-flex align-items-center text-nowrap">
+    <label class="form-label fw-semibold mb-0 me-2">Sort by:</label>
+    <div style="width: 200px">
+      <select class="form-select rounded-pill" 
+              [(ngModel)]="sortBy" 
+              (change)="onSortChange($any($event).target.value)"
+              [disabled]="loading">
+        <option value="Relevance">Relevance</option>
+        <option value="Popularity">Popularity</option>
+        <option value="Price: Low to High">Price: Low to High</option>
+        <option value="Price: High to Low">Price: High to Low</option>
+        <option value="Newest Arrivals">Newest Arrivals</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- Selected filters -->
+<div class="d-flex flex-wrap gap-2 mb-4" *ngIf="selectedFilters.length > 0">
+  <button type="button" class="btn btn-sm btn-secondary" *ngFor="let filter of selectedFilters" (click)="removeFilter(filter)">
+    <i class="ci-close fs-sm ms-n1 me-1"></i>
+    {{filter}}
+  </button>
+  <button type="button" class="btn btn-sm btn-secondary bg-transparent border-0 text-decoration-underline px-0 ms-2" (click)="clearAllFilters()">
+    Clear all
+  </button>
+</div>
+
+<!-- Products Grid -->
+<div *ngIf="!loading && products.length > 0" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-3 row-cols-xl-4 g-4">
+  
+  <!-- Product Item -->
+  <div class="col" *ngFor="let product of products">
+    <div class="card product-card h-100 bg-transparent border-0 shadow-none">
+      <div class="position-relative z-2">
+        
+        <!-- Discount Badge -->
+        <span *ngIf="product.discount" class="badge text-bg-danger position-absolute top-0 start-0 z-2 mt-1 mt-sm-2 ms-1 ms-sm-2">
+          {{product.discountAmount}}
+        </span>
+        
+        <!-- Wishlist Button -->
+        <button type="button" 
+                class="btn btn-icon btn-sm btn-secondary animate-pulse fs-sm bg-body border-0 position-absolute top-0 end-0 z-2 mt-1 mt-sm-2 me-1 me-sm-2" 
+                aria-label="Add to Wishlist"
+                (click)="addToWishlist(product)">
+          <i class="ci-heart animate-target"></i>
+        </button>
+        
+        <!-- Product Image -->
+        <a class="d-block p-2 p-lg-3" [routerLink]="['/product', product.id]">
+          <div class="ratio" style="--cz-aspect-ratio: calc(160 / 191 * 100%)">
+            <img [src]="product.image" [alt]="product.name" class="img-fluid">
+          </div>
+        </a>
+        
+        <!-- Quantity Controls -->
+        <div class="position-absolute w-100 start-0 bottom-0">
+          <div class="d-flex justify-content-end px-2 px-lg-3 pb-2 pb-lg-3">
+            <div class="count-input count-input-collapsible collapsed justify-content-between w-100 bg-transparent border-0 rounded-2">
+              <button type="button" class="btn btn-icon btn-sm btn-primary" data-decrement aria-label="Decrement quantity">
+                <i class="ci-minus fs-sm"></i>
+              </button>
+              <input type="number" class="form-control form-control-sm bg-primary text-white w-100" value="0" min="0" readonly>
+              <button type="button" 
+                      class="product-card-button btn btn-icon btn-sm btn-secondary ms-auto" 
+                      data-increment 
+                      aria-label="Increment quantity"
+                      (click)="addToCart(product)">
+                <span data-count-input-value></span>
+                <i class="ci-plus fs-sm"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Product Info -->
+      <div class="card-body pt-0 px-1 px-md-2 px-lg-3 pb-2">
+        <div class="h6 mb-2">
+          ${{product.price | number:'1.2-2'}}
+          <del *ngIf="product.originalPrice" class="fs-sm fw-normal text-body-tertiary ms-1">${{product.originalPrice | number:'1.2-2'}}</del>
+        </div>
+        <h3 class="fs-sm lh-base mb-0">
+          <a class="hover-effect-underline fw-normal" [routerLink]="['/product', product.id]">{{product.name}}</a>
+        </h3>
+      </div>
+      <div class="fs-xs text-body-secondary px-1 px-md-2 px-lg-3 pb-2 pb-md-3">{{product.weight}}</div>
+    </div>
+  </div>
+</div>
+
+<!-- No Products Message -->
+<div *ngIf="!loading && products.length === 0" class="text-center py-5">
+  <i class="ci-search display-4 text-body-secondary mb-3"></i>
+  <h3 class="h4">No products found</h3>
+  <p class="text-body-secondary">Try adjusting your search or filter criteria.</p>
+</div>
+
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="text-center py-5">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p class="mt-2">Loading products...</p>
+</div>
+
+<!-- Pagination -->
+<nav *ngIf="totalProducts > itemsPerPage" class="border-top mt-4 pt-3" aria-label="Catalog pagination">
+  <ul class="pagination pagination-lg pt-2 pt-md-3">
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <a class="page-link d-flex align-items-center h-100 fs-lg px-2" 
+         href="javascript:void(0)" 
+         (click)="onPageChange(currentPage - 1)"
+         aria-label="Previous page">
+        <i class="ci-chevron-left mx-1"></i>
+      </a>
+    </li>
+    
+    <li *ngFor="let page of getPageNumbers()" 
+        class="page-item" 
+        [class.active]="page === currentPage"
+        [class.disabled]="page === '...'">
+      <a *ngIf="page !== '...'" 
+         class="page-link" 
+         href="javascript:void(0)"
+         (click)="onPageChange(page)">
+        {{page}}
+      </a>
+      <span *ngIf="page === '...'" class="page-link pe-none">...</span>
+    </li>
+    
+    <li class="page-item" [class.disabled]="currentPage * itemsPerPage >= totalProducts">
+      <a class="page-link d-flex align-items-center h-100 fs-lg px-2" 
+         href="javascript:void(0)"
+         (click)="onPageChange(currentPage + 1)"
+         aria-label="Next page">
+        <i class="ci-chevron-right mx-1"></i>
+      </a>
+    </li>
+  </ul>
+</nav>

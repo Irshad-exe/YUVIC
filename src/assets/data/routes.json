@@ -1,0 +1,212 @@
+{
+  "routes": [
+    {
+      "path": "/siteadmin/dashboard",
+      "title": "Dashboard",
+      "iconType": "material-icons-outlined",
+      "icon": "space_dashboard",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["Superuser"],
+      "submenu": []
+    },
+
+    {
+      "path": "",
+      "title": "Catalog Management",
+      "iconType": "material-icons-outlined",
+      "icon": "inventory_2",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["Superuser"],
+      "submenu": [
+        {
+          "path": "/siteadmin/products",
+          "title": "Products",
+          "iconType": "material-icons-outlined",
+          "icon": "inventory",
+          "class": "ml-menu",
+          "role": ["Superuser"],
+          "submenu": []
+        },
+        {
+          "path": "/siteadmin/categories",
+          "title": "Categories",
+          "iconType": "material-icons-outlined",
+          "icon": "category",
+          "class": "ml-menu",
+          "role": ["Superuser"],
+          "submenu": []
+        },
+        {
+          "path": "/siteadmin/producttype",
+          "title": "Product Types",
+          "iconType": "material-icons-outlined",
+          "icon": "category",
+          "class": "ml-menu",
+          "role": ["Superuser"],
+          "submenu": []
+        },
+        {
+          "path": "/siteadmin/brands",
+          "title": "Brand",
+          "iconType": "material-icons-outlined",
+          "icon": "category",
+          "class": "ml-menu",
+          "role": ["Superuser"],
+          "submenu": []
+        },
+        {
+          "path": "/siteadmin/combo",
+          "title": "Combos",
+          "iconType": "material-icons-outlined",
+          "icon": "widgets",
+          "class": "ml-menu",
+          "role": ["Superuser"],
+          "submenu": []
+        }
+      ]
+    },
+
+    {
+      "path": "",
+      "title": "Orders & Customers",
+      "iconType": "material-icons-outlined",
+      "icon": "shopping_cart",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["Superuser"],
+      "submenu": [
+        {
+          "path": "/siteadmin/orders",
+          "title": "Orders",
+          "iconType": "material-icons-outlined",
+          "icon": "shopping_bag",
+          "class": "ml-menu",
+          "submenu": []
+        },
+        {
+          "path": "/siteadmin/refunds",
+          "title": "Refunds",
+          "iconType": "material-icons-outlined",
+          "icon": "request_quote",
+          "class": "ml-menu",
+          "submenu": []
+        },
+        {
+          "path": "/siteadmin/customers",
+          "title": "Customers",
+          "iconType": "material-icons-outlined",
+          "icon": "people",
+          "class": "ml-menu",
+          "submenu": []
+        }
+      ]
+    },
+
+    {
+      "path": "",
+      "title": "Marketing & CMS",
+      "iconType": "material-icons-outlined",
+      "icon": "campaign",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["Superuser"],
+      "submenu": [
+        {
+          "path": "/siteadmin/coupons",
+          "title": "Coupons",
+          "iconType": "material-icons-outlined",
+          "icon": "local_offer",
+          "class": "ml-menu",
+          "submenu": []
+        },
+
+        {
+          "path": "/siteadmin/sliders",
+          "title": "Sliders",
+          "iconType": "material-icons-outlined",
+          "icon": "local_offer",
+          "class": "ml-menu",
+          "submenu": []
+        },
+      {
+          "path": "/siteadmin/cms",
+          "title": "CMS Content",
+          "iconType": "material-icons-outlined",
+          "icon": "description",
+          "class": "ml-menu",
+          "submenu": []
+        }
+      ]
+    },
+
+    {
+      "path": "",
+      "title": "Reports & Analytics",
+      "iconType": "material-icons-outlined",
+      "icon": "insights",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["Admin"],
+      "submenu": [
+        {
+          "path": "/siteadmin/sales-report",
+          "title": "Sales Report",
+          "iconType": "material-icons-outlined",
+          "icon": "bar_chart",
+          "class": "ml-menu",
+          "submenu": []
+        },
+        {
+          "path": "/siteadmin/analytics",
+          "title": "Analytics Dashboard",
+          "iconType": "material-icons-outlined",
+          "icon": "pie_chart",
+          "class": "ml-menu",
+          "submenu": []
+        }
+      ]
+    },
+
+    {
+      "path": "",
+      "title": "Export Reports",
+      "iconType": "material-icons-outlined",
+      "icon": "file_download",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["Admin"],
+      "submenu": [
+        {
+          "path": "/siteadmin/export/pdf",
+          "title": "Export as PDF",
+          "iconType": "material-icons-outlined",
+          "icon": "picture_as_pdf",
+          "class": "ml-menu",
+          "submenu": []
+        },
+        {
+          "path": "/siteadmin/export/excel",
+          "title": "Export as Excel",
+          "iconType": "material-icons-outlined",
+          "icon": "grid_on",
+          "class": "ml-menu",
+          "submenu": []
+        }
+      ]
+    }
+  ]
+}

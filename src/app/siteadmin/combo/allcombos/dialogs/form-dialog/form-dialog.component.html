@@ -1,0 +1,74 @@
+<!-- form-dialog.component.html -->
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">{{dialogTitle}}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" aria-label="Close dialog" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="comboForm" (ngSubmit)="submit()">
+
+      <!-- Combo Information Section -->
+      <h4 class="mt-2 mb-3">Combo Information</h4>
+      <div class="row">
+        <!-- Combo Name -->
+        <div class="col-xl-3 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Combo Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-icon matSuffix>local_offer</mat-icon>
+            <mat-error *ngIf="comboForm.get('name')?.hasError('required')">Combo name is required</mat-error>
+            <mat-error *ngIf="comboForm.get('name')?.hasError('minlength')">Combo name must be at least 2 characters</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-3 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Combo Size</mat-label>
+            <input matInput type="number" formControlName="combo_size" min="1" step="1" required>
+            <mat-icon matSuffix>scale</mat-icon>
+            <mat-error *ngIf="comboForm.get('combo_size')?.hasError('required')">Combo size is required</mat-error>
+          </mat-form-field>
+        </div>
+        <!-- Status -->
+        
+        <!-- Discount Price -->
+        <div class="col-xl-3 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Combo Price (₹)</mat-label>
+            <input matInput type="number" formControlName="discount_price" min="0" step="0.01" required>
+            <mat-icon matSuffix>attach_money</mat-icon>
+            <mat-error *ngIf="comboForm.get('discount_price')?.hasError('required')">Combo price is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-3 mb-2">
+          <mat-form-field appearance="outline" class="example-full-width">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="active" required>
+              <mat-option [value]="true">Active</mat-option>
+              <mat-option [value]="false">Inactive</mat-option>
+            </mat-select>
+            <mat-icon matSuffix>toggle_on</mat-icon>
+          </mat-form-field>
+        </div>
+
+      </div>
+      <!-- Form Buttons -->
+      <div class="row mt-4">
+        <div class="col-xl-12 mb-2">
+          <div class="example-button-row">
+            <button mat-flat-button color="primary" type="submit" [disabled]="!comboForm.valid">
+              {{ action === 'edit' ? 'Update Combo' : 'Add Combo' }}
+            </button>
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1" type="button">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="container py-5">
+    <div class="row">
+        <!-- Checkout Form -->
+        <div class="col-lg-8">
+            <h2 class="h5 mb-4">Checkout</h2>
+
+            <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+                <!-- Shipping Address -->
+                <h3 class="h6 mb-3">Shipping Address</h3>
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" formControlName="firstName"
+                            [class.is-invalid]="f['firstName'].touched && f['firstName'].invalid">
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" formControlName="lastName"
+                            [class.is-invalid]="f['lastName'].touched && f['lastName'].invalid">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-control" formControlName="phone"
+                            [class.is-invalid]="f['phone'].touched && f['phone'].invalid">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" formControlName="email"
+                            [class.is-invalid]="f['email'].touched && f['email'].invalid">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-control" formControlName="address"
+                            [class.is-invalid]="f['address'].touched && f['address'].invalid">
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control" formControlName="city"
+                            [class.is-invalid]="f['city'].touched && f['city'].invalid">
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">ZIP Code</label>
+                        <input type="text" class="form-control" formControlName="zipCode"
+                            [class.is-invalid]="f['zipCode'].touched && f['zipCode'].invalid">
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <h3 class="h6 mb-3">Payment Method</h3>
+                <div class="mb-4">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" formControlName="paymentMethod" id="cod"
+                            value="cash_on_delivery">
+                        <label class="form-check-label" for="cod">
+                            Cash on Delivery
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" formControlName="paymentMethod" id="online"
+                            value="online">
+                        <label class="form-check-label" for="online">
+                            Online Payment (Razorpay)
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" [disabled]="checkoutForm.invalid || isSubmitting">
+                    {{ isSubmitting ? 'Placing Order...' : 'Place Order' }}
+                </button>
+            </form>
+        </div>
+
+        <!-- Order Review -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="h5 card-title mb-4">Order Summary</h3>
+                    <ul class="list-unstyled mb-4">
+                        <li *ngFor="let item of (cart$ | async)?.items" class="d-flex justify-content-between mb-2">
+                            <span>{{ item.product_name }} x {{ item.quantity }}</span>
+                            <span class="text-muted">{{ item.total | currency }}</span>
+                        </li>
+                    </ul>
+                    <div class="border-top pt-3">
+                        <div class="d-flex justify-content-between fw-bold mb-2">
+                            <span>Total</span>
+                            <span>{{ (cart$ | async)?.total | currency }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

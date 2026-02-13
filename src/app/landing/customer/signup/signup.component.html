@@ -1,0 +1,356 @@
+<!-- Page content -->
+<main class="content-wrapper w-100 px-3 ps-lg-5 pe-lg-4 mx-auto" style="max-width: 1920px">
+  <div class="d-lg-flex">
+
+    <!-- Signup form + Footer -->
+    <div class="d-flex flex-column min-vh-100 w-100 py-4 mx-auto me-lg-5" style="max-width: 416px">
+
+      <!-- Logo -->
+      <header class="navbar px-0 pb-4 mt-n2 mt-sm-0 mb-2 mb-md-3 mb-lg-4">
+        <a routerLink="/" class="navbar-brand pt-0">
+          <span class="d-flex flex-shrink-0 text-primary me-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"><path d="M36 18.01c0 8.097-5.355 14.949-12.705 17.2a18.12 18.12 0 0 1-5.315.79C9.622 36 2.608 30.313.573 22.611.257 21.407.059 20.162 0 18.879v-1.758c.02-.395.059-.79.099-1.185.099-.908.277-1.817.514-2.686C2.687 5.628 9.682 0 18 0c5.572 0 10.551 2.528 13.871 6.517 1.502 1.797 2.648 3.91 3.359 6.201.494 1.659.771 3.436.771 5.292z" fill="currentColor"/><g fill="#fff"><path d="M17.466 21.624c-.514 0-.988-.316-1.146-.829-.198-.632.138-1.303.771-1.501l7.666-2.469-1.205-8.254-13.317 4.621a1.19 1.19 0 0 1-1.521-.75 1.19 1.19 0 0 1 .751-1.521l13.89-4.818c.553-.197 1.166-.138 1.64.158a1.82 1.82 0 0 1 .85 1.284l1.344 9.183c.138.987-.494 1.994-1.482 2.33l-7.864 2.528-.375.04zm7.31.138c-.178-.632-.85-1.007-1.482-.81l-5.177 1.58c-2.331.79-3.28.02-3.418-.099l-6.56-8.412a4.25 4.25 0 0 0-4.406-1.758l-3.122.987c-.237.889-.415 1.777-.514 2.686l4.228-1.363a1.84 1.84 0 0 1 1.857.81l6.659 8.551c.751.948 2.015 1.323 3.359 1.323.909 0 1.857-.178 2.687-.474l5.078-1.54c.632-.178 1.008-.829.81-1.481z"/><use href="#czlogo"/><use href="#czlogo" x="8.516" y="-2.172"/></g><defs><path id="czlogo" d="M18.689 28.654a1.94 1.94 0 0 1-1.936 1.935 1.94 1.94 0 0 1-1.936-1.935 1.94 1.94 0 0 1 1.936-1.935 1.94 1.94 0 0 1 1.936 1.935z"/></defs></svg>
+          </span>
+          Yuvic
+        </a>
+      </header>
+
+      <h1 class="h2 mt-auto">Create an account</h1>
+      <div class="nav fs-sm mb-3 mb-lg-4">
+        I already have an account
+        <a class="nav-link text-decoration-underline p-0 ms-2" routerLink="/sign-in">Sign in</a>
+      </div>
+      <div class="nav fs-sm mb-4 d-lg-none">
+        <span class="me-2">Uncertain about creating an account?</span>
+        <a class="nav-link text-decoration-underline p-0" 
+           href="#benefits" 
+           data-bs-toggle="offcanvas" 
+           aria-controls="benefits"
+           (click)="openBenefits()">
+          Explore the Benefits
+        </a>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+        
+        <!-- Loading Spinner -->
+        <div *ngIf="loading" class="text-center mb-3">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+          <i class="ci-close-circle me-2"></i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Success Message -->
+        <div *ngIf="successMessage" class="alert alert-success d-flex align-items-center mb-4" role="alert">
+          <i class="ci-check-circle me-2"></i>
+          {{ successMessage }}
+        </div>
+
+        <!-- Name Field -->
+        <div class="position-relative mb-4">
+          <label for="register-name" class="form-label">Full Name</label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="register-name"
+            formControlName="name"
+            [class.is-invalid]="(f['name'].touched || submitted) && f['name'].invalid">
+          <div *ngIf="(f['name'].touched || submitted) && f['name'].invalid" 
+               class="invalid-tooltip bg-transparent py-0">
+            <span *ngIf="f['name'].errors?.['required']">Name is required!</span>
+            <span *ngIf="f['name'].errors?.['minlength']">Name must be at least 2 characters!</span>
+          </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="position-relative mb-4">
+          <label for="register-email" class="form-label">Email</label>
+          <input 
+            type="email" 
+            class="form-control form-control-lg" 
+            id="register-email"
+            formControlName="email"
+            [class.is-invalid]="(f['email'].touched || submitted) && f['email'].invalid">
+          <div *ngIf="(f['email'].touched || submitted) && f['email'].invalid" 
+               class="invalid-tooltip bg-transparent py-0">
+            <span *ngIf="f['email'].errors?.['required']">Email is required!</span>
+            <span *ngIf="f['email'].errors?.['email']">Enter a valid email address!</span>
+          </div>
+        </div>
+        
+        <!-- Password Field -->
+        <div class="mb-4">
+          <label for="register-password" class="form-label">Password</label>
+          <div class="password-toggle">
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              class="form-control form-control-lg" 
+              id="register-password" 
+              placeholder="Minimum 8 characters"
+              formControlName="password"
+              [class.is-invalid]="(f['password'].touched || submitted) && f['password'].invalid">
+            <div *ngIf="(f['password'].touched || submitted) && f['password'].invalid" 
+                 class="invalid-tooltip bg-transparent py-0">
+              <span *ngIf="f['password'].errors?.['required']">Password is required!</span>
+              <span *ngIf="f['password'].errors?.['minlength']">Password must be at least 8 characters!</span>
+            </div>
+            <label class="password-toggle-button fs-lg" aria-label="Show/hide password">
+              <input 
+                type="checkbox" 
+                class="btn-check"
+                (change)="togglePasswordVisibility()">
+              <i [class]="showPassword ? 'ci-eye-off' : 'ci-eye'"></i>
+            </label>
+          </div>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="mb-4">
+          <label for="register-confirm-password" class="form-label">Confirm Password</label>
+          <div class="password-toggle">
+            <input 
+              type="password" 
+              class="form-control form-control-lg" 
+              id="register-confirm-password" 
+              placeholder="Confirm your password"
+              formControlName="confirmPassword"
+              [class.is-invalid]="(f['confirmPassword'].touched || submitted) && f['confirmPassword'].invalid">
+            <div *ngIf="(f['confirmPassword'].touched || submitted) && f['confirmPassword'].invalid" 
+                 class="invalid-tooltip bg-transparent py-0">
+              <span *ngIf="f['confirmPassword'].errors?.['required']">Please confirm your password!</span>
+            </div>
+            <div *If="signUpForm.errors?.['passwordMismatch'] && (f['confirmPassword'].touched || submitted)" 
+                 class="invalid-tooltip bg-transparent py-0">
+              Passwords do not match!
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Field -->
+        <div class="mb-4">
+          <label for="register-address" class="form-label">Address (Optional)</label>
+          <textarea 
+            class="form-control form-control-lg" 
+            id="register-address" 
+            rows="2"
+            placeholder="Enter your address"
+            formControlName="address"></textarea>
+        </div>
+        
+        <div class="d-flex flex-column gap-2 mb-4">
+          <div class="form-check">
+            <input 
+              type="checkbox" 
+              class="form-check-input" 
+              id="save-pass"
+              formControlName="savePassword">
+            <label for="save-pass" class="form-check-label">Save the password</label>
+          </div>
+          <div class="form-check">
+            <input 
+              type="checkbox" 
+              class="form-check-input" 
+              id="privacy" 
+              formControlName="privacyPolicy"
+              [class.is-invalid]="(f['privacyPolicy'].touched || submitted) && f['privacyPolicy'].invalid">
+            <label for="privacy" class="form-check-label">
+              I have read and accept the <a class="text-dark-emphasis" href="#!">Privacy Policy</a>
+            </label>
+            <div *ngIf="(f['privacyPolicy'].touched || submitted) && f['privacyPolicy'].invalid" 
+                 class="invalid-feedback d-block">
+              You must accept the Privacy Policy
+            </div>
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-lg btn-primary w-100" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          {{ loading ? 'Creating Account...' : 'Create an account' }}
+          <i *ngIf="!loading" class="ci-chevron-right fs-lg ms-1"></i>
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="d-flex align-items-center my-4">
+        <hr class="w-100 m-0">
+        <span class="text-body-emphasis fw-medium text-nowrap mx-4">or continue with</span>
+        <hr class="w-100 m-0">
+      </div>
+
+      <!-- Social login -->
+      <div class="d-flex flex-column flex-sm-row gap-3 pb-4 mb-3 mb-lg-4">
+        <div id="google-signup-button" class="w-100"></div>
+        <button 
+          type="button" 
+          class="btn btn-lg btn-outline-secondary w-100 px-2"
+          (click)="socialLogin('facebook')">
+          <i class="ci-facebook ms-1 me-1"></i>
+          Facebook
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-lg btn-outline-secondary w-100 px-2"
+          (click)="socialLogin('apple')">
+          <i class="ci-apple ms-1 me-1"></i>
+          Apple
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <footer class="mt-auto">
+        <div class="nav mb-4">
+          <a class="nav-link text-decoration-underline p-0" routerLink="/help">Need help?</a>
+        </div>
+        <p class="fs-xs mb-0">
+          &copy; All rights reserved. Made by 
+          <span class="animate-underline">
+            <a class="animate-target text-dark-emphasis text-decoration-none" 
+               href="#" 
+               target="_blank" 
+               rel="noreferrer">Yuvic</a>
+          </span>
+        </p>
+      </footer>
+    </div>
+
+    
+
+    <!-- Benefits section that turns into offcanvas on screens < 992px wide (lg breakpoint) -->
+    <div class="offcanvas-lg offcanvas-end w-100 py-lg-4 ms-auto" id="benefits" style="max-width: 1034px">
+      <div class="offcanvas-header justify-content-end position-relative z-2 p-3">
+        <button type="button" class="btn btn-icon btn-outline-dark text-dark border-dark bg-transparent rounded-circle d-none-dark" 
+                data-bs-dismiss="offcanvas" data-bs-target="#benefits" aria-label="Close">
+          <i class="ci-close fs-lg"></i>
+        </button>
+        <button type="button" class="btn btn-icon btn-outline-dark text-light border-light bg-transparent rounded-circle d-none d-inline-flex-dark" 
+                data-bs-dismiss="offcanvas" data-bs-target="#benefits" aria-label="Close">
+          <i class="ci-close fs-lg"></i>
+        </button>
+      </div>
+      <div class="position-absolute top-0 start-0 w-100 h-100 d-lg-none">
+        <span class="position-absolute top-0 start-0 w-100 h-100 d-none-dark" 
+              style="background: linear-gradient(-90deg, #accbee 0%, #e7f0fd 100%)"></span>
+        <span class="position-absolute top-0 start-0 w-100 h-100 d-none d-block-dark" 
+              style="background: linear-gradient(-90deg, #1b273a 0%, #1f2632 100%)"></span>
+      </div>
+      <div class="offcanvas-body position-relative z-2 d-lg-flex flex-column align-items-center justify-content-center h-100 pt-2 px-3 p-lg-0">
+        <div class="position-absolute top-0 start-0 w-100 h-100 d-none d-lg-block">
+          <span class="position-absolute top-0 start-0 w-100 h-100 rounded-5 d-none-dark" 
+                style="background: linear-gradient(-90deg, #accbee 0%, #e7f0fd 100%)"></span>
+          <span class="position-absolute top-0 start-0 w-100 h-100 rounded-5 d-none d-block-dark" 
+                style="background: linear-gradient(-90deg, #1b273a 0%, #1f2632 100%)"></span>
+        </div>
+        <div class="position-relative z-2 w-100 text-center px-md-2 p-lg-5">
+          <h2 class="h4 pb-3">Yuvic account benefits</h2>
+          <div class="mx-auto" style="max-width: 790px">
+            <div class="row row-cols-1 row-cols-sm-2 g-3 g-md-4 g-lg-3 g-xl-4">
+              
+              <!-- Benefit 1 -->
+              <div class="col">
+                <div class="card h-100 bg-transparent border-0">
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-25 border border-white border-opacity-50 rounded-4 d-none-dark"></span>
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border rounded-4 d-none d-block-dark" style="--cz-bg-opacity: .05"></span>
+                  <div class="card-body position-relative z-2">
+                    <div class="d-inline-flex position-relative text-info p-3">
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-white rounded-pill d-none-dark"></span>
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
+                      <i class="ci-mail position-relative z-2 fs-4 m-1"></i>
+                    </div>
+                    <h3 class="h6 pt-2 my-2">Subscribe to your favorite products</h3>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Benefit 2 -->
+              <div class="col">
+                <div class="card h-100 bg-transparent border-0">
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-25 border border-white border-opacity-50 rounded-4 d-none-dark"></span>
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border rounded-4 d-none d-block-dark" style="--cz-bg-opacity: .05"></span>
+                  <div class="card-body position-relative z-2">
+                    <div class="d-inline-flex position-relative text-info p-3">
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-white rounded-pill d-none-dark"></span>
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
+                      <i class="ci-settings position-relative z-2 fs-4 m-1"></i>
+                    </div>
+                    <h3 class="h6 pt-2 my-2">View and manage your orders and wishlist</h3>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Benefit 3 -->
+              <div class="col">
+                <div class="card h-100 bg-transparent border-0">
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-25 border border-white border-opacity-50 rounded-4 d-none-dark"></span>
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border rounded-4 d-none d-block-dark" style="--cz-bg-opacity: .05"></span>
+                  <div class="card-body position-relative z-2">
+                    <div class="d-inline-flex position-relative text-info p-3">
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-white rounded-pill d-none-dark"></span>
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
+                      <i class="ci-gift position-relative z-2 fs-4 m-1"></i>
+                    </div>
+                    <h3 class="h6 pt-2 my-2">Earn rewards for future purchases</h3>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Benefit 4 -->
+              <div class="col">
+                <div class="card h-100 bg-transparent border-0">
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-25 border border-white border-opacity-50 rounded-4 d-none-dark"></span>
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border rounded-4 d-none d-block-dark" style="--cz-bg-opacity: .05"></span>
+                  <div class="card-body position-relative z-2">
+                    <div class="d-inline-flex position-relative text-info p-3">
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-white rounded-pill d-none-dark"></span>
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
+                      <i class="ci-percent position-relative z-2 fs-4 m-1"></i>
+                    </div>
+                    <h3 class="h6 pt-2 my-2">Receive exclusive offers and discounts</h3>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Benefit 5 -->
+              <div class="col">
+                <div class="card h-100 bg-transparent border-0">
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-25 border border-white border-opacity-50 rounded-4 d-none-dark"></span>
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border rounded-4 d-none d-block-dark" style="--cz-bg-opacity: .05"></span>
+                  <div class="card-body position-relative z-2">
+                    <div class="d-inline-flex position-relative text-info p-3">
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-white rounded-pill d-none-dark"></span>
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
+                      <i class="ci-heart position-relative z-2 fs-4 m-1"></i>
+                    </div>
+                    <h3 class="h6 pt-2 my-2">Create multiple wishlists</h3>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Benefit 6 -->
+              <div class="col">
+                <div class="card h-100 bg-transparent border-0">
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white bg-opacity-25 border border-white border-opacity-50 rounded-4 d-none-dark"></span>
+                  <span class="position-absolute top-0 start-0 w-100 h-100 bg-white border rounded-4 d-none d-block-dark" style="--cz-bg-opacity: .05"></span>
+                  <div class="card-body position-relative z-2">
+                    <div class="d-inline-flex position-relative text-info p-3">
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-white rounded-pill d-none-dark"></span>
+                      <span class="position-absolute top-0 start-0 w-100 h-100 bg-body-secondary rounded-pill d-none d-block-dark"></span>
+                      <i class="ci-pie-chart position-relative z-2 fs-4 m-1"></i>
+                    </div>
+                    <h3 class="h6 pt-2 my-2">Pay for purchases by installments</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

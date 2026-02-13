@@ -1,0 +1,104 @@
+<section class="container pb-5 mb-2 mb-sm-3 mb-lg-4 mb-xl-5">
+  <div class="row">
+    <!-- Categories list -->
+    <div class="col-lg-3 pb-2 pb-sm-3 pb-md-4 mb-5 mb-lg-0">
+      <h2 class="h3 border-bottom pb-3 pb-md-4 mb-4">Categories</h2>
+      <div class="row nav g-3 g-sm-4">
+        <div *ngFor="let category of productCategories" class="col-sm-6 col-md-4 col-lg-12 d-flex">
+          <div class="position-relative d-flex min-w-0 align-items-center">
+            <div class="d-flex flex-shrink-0 align-items-center justify-content-center bg-body-tertiary rounded-circle" 
+                 style="width: 56px; height: 56px">
+              <img [src]="category.image" width="40" [alt]="category.name">
+            </div>
+            <div class="min-w-0 ps-3">
+              <a class="nav-link animate-underline stretched-link fs-base fw-semibold p-0 mb-1" 
+                 [routerLink]="category.link">
+                <span class="animate-target text-truncate">{{ category.name }}</span>
+              </a>
+              <div class="fs-xs fw-normal text-body-secondary">{{ category.count }} products</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products grid -->
+    <div class="col-lg-9">
+      <div class="d-flex align-items-center justify-content-between border-bottom pb-3 pb-md-4 mb-3 mb-lg-4">
+        <h2 class="h3 mb-0">Popular products</h2>
+        <div class="nav ms-3">
+          <a class="nav-link animate-underline px-0 py-2" routerLink="/shop">
+            <span class="animate-target">View all</span>
+            <i class="ci-chevron-right fs-base ms-1"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-3 row-cols-xl-4 g-4">
+        <div *ngFor="let product of popularProducts" class="col">
+          <div class="card product-card h-100 bg-transparent border-0 shadow-none">
+            <div class="position-relative z-2">
+              <!-- Discount badge -->
+              <span *ngIf="product.discount" 
+                    class="badge text-bg-danger position-absolute top-0 start-0 z-2 mt-1 mt-sm-2 ms-1 ms-sm-2">
+                -{{ product.discount }}%
+              </span>
+              
+              <!-- Favorite button -->
+              <button type="button" 
+                      class="btn btn-icon btn-sm btn-secondary animate-pulse fs-sm bg-body border-0 position-absolute top-0 end-0 z-2 mt-1 mt-sm-2 me-1 me-sm-2" 
+                      (click)="toggleFavorite(product)"
+                      [attr.aria-label]="product.isFavorite ? 'Remove from wishlist' : 'Add to wishlist'">
+                <i [class]="product.isFavorite ? 'ci-heart-fill text-danger' : 'ci-heart'"></i>
+              </button>
+
+              <!-- Product image -->
+              <a class="d-block p-2 p-lg-3" [routerLink]="['/product', product.id]">
+                <div class="ratio" style="--cz-aspect-ratio: calc(160 / 191 * 100%)">
+                  <img [src]="product.image" [alt]="product.name">
+                </div>
+              </a>
+
+              <!-- Quantity controls -->
+              <div class="position-absolute w-100 start-0 bottom-0">
+                <div class="d-flex justify-content-end px-2 px-lg-3 pb-2 pb-lg-3">
+                  <div class="count-input count-input-collapsible collapsed justify-content-between w-100 bg-transparent border-0 rounded-2">
+                    <button type="button" class="btn btn-icon btn-sm btn-primary" 
+                            (click)="decrementQuantity(product)" 
+                            [disabled]="product.quantity <= 0"
+                            aria-label="Decrement quantity">
+                      <i class="ci-minus fs-sm"></i>
+                    </button>
+                    <input type="number" class="form-control form-control-sm bg-primary text-white w-100" 
+                           [value]="product.quantity" min="0" readonly>
+                    <button type="button" class="product-card-button btn btn-icon btn-sm btn-secondary ms-auto" 
+                            (click)="incrementQuantity(product)"
+                            aria-label="Increment quantity">
+                      <span>{{ product.quantity }}</span>
+                      <i class="ci-plus fs-sm"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body pt-0 px-1 px-md-2 px-lg-3 pb-2">
+              <div class="h6 mb-2">
+                ${{ product.price }}
+                <del *ngIf="product.originalPrice" class="fs-sm fw-normal text-body-tertiary ms-1">
+                  ${{ product.originalPrice }}
+                </del>
+              </div>
+              <h3 class="fs-sm lh-base mb-0">
+                <a class="hover-effect-underline fw-normal" [routerLink]="['/product', product.id]">
+                  {{ product.name }}
+                </a>
+              </h3>
+            </div>
+            <div class="fs-xs text-body-secondary px-1 px-md-2 px-lg-3 pb-2 pb-md-3">{{ product.weight }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

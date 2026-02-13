@@ -1,0 +1,86 @@
+<!-- Cartzilla Theme Structure -->
+<div class="cartzilla-theme">
+  
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" routerLink="/">
+        <img src="assets/cartzilla/img/logo-dark.png" alt="Yuvic" height="40">
+      </a>
+
+      <!-- Navigation -->
+      <div class="d-flex align-items-center">
+        <nav class="d-none d-lg-flex">
+          <a class="nav-link me-4" routerLink="/" routerLinkActive="active">Home</a>
+          <a class="nav-link me-4" routerLink="/shop">Shop</a>
+          <a class="nav-link me-4" routerLink="/categories">Categories</a>
+        </nav>
+
+        <!-- Right Actions -->
+        <div class="d-flex align-items-center ms-4">
+          <a routerLink="/authentication/signin" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-person me-1"></i> Sign In
+          </a>
+          <a routerLink="/admin/dashboard" class="btn btn-outline-primary me-2">
+            Admin Panel
+          </a>
+          <a routerLink="/cart" class="btn btn-outline-primary position-relative">
+            <i class="bi bi-cart3"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill">
+              0
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content" style="padding-top: 80px;">
+    <ng-content></ng-content>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <h5 class="text-white mb-3">Yuvic</h5>
+          <p class="text-muted">Your trusted grocery delivery service.</p>
+        </div>
+        <div class="col-lg-2 col-6 mb-4 mb-lg-0">
+          <h6 class="text-white mb-3">Shop</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-muted text-decoration-none">Fresh Fruits</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Vegetables</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Dairy Products</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-6 mb-4 mb-lg-0">
+          <h6 class="text-white mb-3">Company</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Contact</a></li>
+            <li><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-4">
+          <h6 class="text-white mb-3">Newsletter</h6>
+          <p class="text-muted mb-3">Subscribe to get updates on products and offers</p>
+          <div class="input-group">
+            <input type="email" class="form-control" placeholder="Your email">
+            <button class="btn btn-primary" type="button">Subscribe</button>
+          </div>
+        </div>
+      </div>
+      <hr class="my-4 border-secondary">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="text-muted mb-0">&copy; 2024 Yuvic. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
