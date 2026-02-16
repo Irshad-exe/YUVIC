@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { HeaderService } from './header.service';
 import { Category } from '../../../../app/siteadmin/categories/allcategories/category.model';
 
@@ -27,8 +28,10 @@ export class CartzillaHeaderComponent implements OnInit, OnDestroy {
   activeDeliveryTab = 'delivery';
   selectedAddressId: string = '';
   selectedStoreId: string = '';
+  isCategoriesDropdownOpen = false;
+  isAccountDropdownOpen = false;
 
-  constructor(private headerService: HeaderService, private router: Router) { }
+  constructor(private headerService: HeaderService, private router: Router, private ngZone: NgZone) { }
 
   ngOnInit(): void {
     // Subscribe to categories
@@ -57,10 +60,25 @@ export class CartzillaHeaderComponent implements OnInit, OnDestroy {
 
     // Initialize theme
     this.initializeTheme();
+
+    // Close dropdowns on route change
+    this.subscriptions.add(
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd)
+      ).subscribe(() => {
+        this.closeAllDropdowns();
+      })
+    );
+
+    // Close dropdowns on outside click
+    this.ngZone.runOutsideAngular(() => {
+      document.addEventListener('click', this.handleOutsideClick.bind(this));
+    });
   }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+    document.removeEventListener('click', this.handleOutsideClick.bind(this));
   }
 
   toggleSearch(): void {
@@ -158,5 +176,51 @@ export class CartzillaHeaderComponent implements OnInit, OnDestroy {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     localStorage.setItem('theme', newTheme);
     document.documentElement.setAttribute('data-bs-theme', newTheme);
+  }
+
+  // Force navigation method
+  navigateTo(path: string): void {
+    this.router.navigate([path]).then(() => {
+      // Close any open dropdowns
+      const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+      dropdowns.forEach(dropdown => {
+        dropdown.classList.remove('show');
+      });
+    });
+  }
+
+  // Navigate to category and close dropdown
+  navigateToCategory(categoryId: string): void {
+    this.closeAllDropdowns();
+    this.router.navigate(['/shop-category', categoryId]);
+  }
+
+  // Toggle dropdowns
+  toggleCategoriesDropdown(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isCategoriesDropdownOpen = !this.isCategoriesDropdownOpen;
+    this.isAccountDropdownOpen = false;
+  }
+
+  toggleAccountDropdown(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isAccountDropdownOpen = !this.isAccountDropdownOpen;
+    this.isCategoriesDropdownOpen = false;
+  }
+
+  closeAllDropdowns(): void {
+    this.isCategoriesDropdownOpen = false;
+    this.isAccountDropdownOpen = false;
+  }
+
+  private handleOutsideClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+      this.ngZone.run(() => {
+        this.closeAllDropdowns();
+      });
+    }
   }
 }

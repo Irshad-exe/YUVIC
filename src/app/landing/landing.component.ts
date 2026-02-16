@@ -78,21 +78,6 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
     this.swiperLink.rel = 'stylesheet';
     this.swiperLink.href = 'assets/cartzilla/vendor/swiper/swiper-bundle.min.css';
     document.head.appendChild(this.swiperLink);
-    
-    this.simplebarLink = document.createElement('link');
-    this.simplebarLink.rel = 'stylesheet';
-    this.simplebarLink.href = 'assets/cartzilla/vendor/simplebar/dist/simplebar.min.css';
-    document.head.appendChild(this.simplebarLink);
-
-    this.choicesLink = document.createElement('link');
-    this.choicesLink.rel = 'stylesheet';
-    this.choicesLink.href = 'assets/cartzilla/vendor/choices.js/public/assets/styles/choices.min.css';
-    document.head.appendChild(this.choicesLink);
-
-    this.nouisliderLink = document.createElement('link');
-    this.nouisliderLink.rel = 'stylesheet';
-    this.nouisliderLink.href = 'assets/cartzilla/vendor/nouislider/dist/nouislider.min.css';
-    document.head.appendChild(this.nouisliderLink);
 
     
     // Load JavaScript
@@ -107,10 +92,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
       const scriptsToLoad = [
         'assets/cartzilla/vendor/swiper/swiper-bundle.min.js', 
         'assets/cartzilla/js/theme.min.js',
-        'assets/cartzilla/vendor/simplebar/dist/simplebar.min.js',
         'assets/cartzilla/js/theme-switcher.js',
-        'assets/cartzilla/vendor/choices.js/public/assets/scripts/choices.min.js',
-        'assets/cartzilla/vendor/nouislider/dist/nouislider.min.js',
       ];
 
       this.loadScriptsSequentially(scriptsToLoad, resolve);
@@ -128,11 +110,24 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const script = document.createElement('script');
       script.src = scripts[index];
+      
+      // Add error handler to catch script execution errors
+      const originalOnError = window.onerror;
+      window.onerror = (msg, url, lineNo, columnNo, error) => {
+        if (url && url.includes('theme.min.js')) {
+          console.warn('Cartzilla theme.min.js non-critical error suppressed');
+          return true; // Suppress error
+        }
+        return originalOnError ? originalOnError(msg, url, lineNo, columnNo, error) : false;
+      };
+      
       script.onload = () => {
+        window.onerror = originalOnError; // Restore original handler
         index++;
         loadNextScript();
       };
       script.onerror = () => {
+        window.onerror = originalOnError; // Restore original handler
         console.error(`Failed to load script: ${scripts[index]}`);
         index++;
         loadNextScript();
@@ -167,7 +162,12 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
   private initializeCartzilla(): void {
     // Wait for DOM to be fully ready
     setTimeout(() => {
-      this.cartzillaService.initializeCartzilla();
+      try {
+        this.cartzillaService.initializeCartzilla();
+      } catch (error) {
+        // Suppress Cartzilla initialization errors for missing elements
+        console.warn('Cartzilla initialization warning (non-critical):', error);
+      }
     }, 300);
   }
 

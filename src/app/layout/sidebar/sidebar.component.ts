@@ -18,7 +18,6 @@ import {
 import { RouteInfo } from './sidebar.metadata';
 import { AuthService, Role } from '@core';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgScrollbar } from 'ngx-scrollbar';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { SidebarService } from './sidebar.service';
 import { environment } from 'environments/environment';
@@ -28,7 +27,6 @@ import { CapitalizePipe } from 'app/pipe/capitalize.pipe';
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
     imports: [
-        NgScrollbar,
         RouterLinkActive,
         RouterLink,
         NgClass,

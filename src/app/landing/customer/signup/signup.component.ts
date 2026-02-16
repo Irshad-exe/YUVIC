@@ -75,7 +75,7 @@ export class SignUpComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // Custom validator for password match
-  passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
+  passwordMatchValidator(control: AbstractControl): null {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
 
@@ -83,7 +83,18 @@ export class SignUpComponent implements OnInit, AfterViewInit, OnDestroy {
       return null;
     }
 
-    return password.value === confirmPassword.value ? null : { passwordMismatch: true };
+    if (password.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ passwordMismatch: true });
+    } else {
+      // Clear the error if passwords match
+      const errors = confirmPassword.errors;
+      if (errors) {
+        delete errors['passwordMismatch'];
+        confirmPassword.setErrors(Object.keys(errors).length ? errors : null);
+      }
+    }
+    
+    return null;
   }
 
   onSubmit(): void {

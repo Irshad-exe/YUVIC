@@ -18,7 +18,6 @@ import {
 } from '@core';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-icons.component';
-import { NgScrollbar } from 'ngx-scrollbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -53,7 +52,6 @@ interface Notifications {
     NgClass,
     MatButtonModule,
     MatMenuModule,
-    NgScrollbar,
     FeatherIconsComponent,
     MatIconModule,
     MatToolbarModule,

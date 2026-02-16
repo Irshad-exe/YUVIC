@@ -242,23 +242,24 @@
 
     <!-- Categories dropdown visible on screens > 991px wide (lg breakpoint) -->
     <div class="dropdown d-none d-lg-block w-100 me-4" style="max-width: 200px">
-      <button type="button" class="btn btn-lg btn-secondary w-100 border-0 rounded-pill" data-bs-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="btn btn-lg btn-secondary w-100 border-0 rounded-pill" 
+        (click)="toggleCategoriesDropdown($event)"
+        [attr.aria-expanded]="isCategoriesDropdownOpen">
         <i class="ci-grid fs-lg me-2 ms-n1"></i>
         Categories
         <i class="ci-chevron-down fs-lg me-2 ms-auto me-n1"></i>
       </button>
-      <div class="dropdown-menu rounded-4 p-4" style="--cz-dropdown-spacer: .75rem; margin-left: -75px; min-width: 800px; max-height: 600px; overflow-y: auto;">
+      <div class="dropdown-menu rounded-4 p-4" [class.show]="isCategoriesDropdownOpen" style="--cz-dropdown-spacer: .75rem; margin-left: -75px; min-width: 800px; max-height: 600px; overflow-y: auto;">
         <div class="row row-cols-3 g-4">
           <div class="col" *ngFor="let parent of getParentCategories()">
             <h6 class="mb-2">
-              <a class="text-dark  text-decoration-none" [routerLink]="['/shop-category', parent.id]">
+              <a class="text-dark text-decoration-none" (click)="navigateToCategory(parent.id); $event.preventDefault()">
                 {{parent.name}}
               </a>
             </h6>
             <ul class="nav flex-column gap-1" *ngIf="getChildCategories(parent.id).length > 0">
               <li *ngFor="let child of getChildCategories(parent.id)">
-                <a class="nav-link p-1 fs-sm text-body-secondary" [routerLink]="['/shop-category', child.id]">
+                <a class="nav-link p-1 fs-sm text-body-secondary" (click)="navigateToCategory(child.id); $event.preventDefault()">
                   {{child.name}}
                 </a>
               </li>
@@ -302,18 +303,19 @@
 
       <!-- Account dropdown -->
       <div class="dropdown">
-        <a class="btn btn-icon fs-xl btn-outline-secondary border-0 rounded-circle animate-scale" href="#" role="button"
-          data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account">
+        <a class="btn btn-icon fs-xl btn-outline-secondary border-0 rounded-circle animate-scale" 
+          (click)="toggleAccountDropdown($event)" role="button"
+          [attr.aria-expanded]="isAccountDropdownOpen" aria-label="Account">
           <i class="ci-user animate-target"></i>
         </a>
-        <ul class="dropdown-menu dropdown-menu-end">
+        <ul class="dropdown-menu dropdown-menu-end" [class.show]="isAccountDropdownOpen">
           <li *ngIf="!user.is_logged_in">
-            <a class="dropdown-item" routerLink="/signin">
+            <a class="dropdown-item" (click)="navigateTo('/signin'); $event.preventDefault()">
               <i class="ci-log-in fs-base opacity-75 me-2"></i>Sign In
             </a>
           </li>
           <li *ngIf="!user.is_logged_in">
-            <a class="dropdown-item" routerLink="/signup">
+            <a class="dropdown-item" (click)="navigateTo('/signup'); $event.preventDefault()">
               <i class="ci-user-plus fs-base opacity-75 me-2"></i>Sign Up
             </a>
           </li>
@@ -324,12 +326,12 @@
             </div>
           </li>
           <li *ngIf="user.is_logged_in">
-            <a class="dropdown-item" routerLink="/profile">
+            <a class="dropdown-item" (click)="navigateTo('/profile'); $event.preventDefault()">
               <i class="ci-user fs-base opacity-75 me-2"></i>My Profile
             </a>
           </li>
           <li *ngIf="user.is_logged_in">
-            <a class="dropdown-item" routerLink="/my-orders">
+            <a class="dropdown-item" (click)="navigateTo('/my-orders'); $event.preventDefault()">
               <i class="ci-shopping-bag fs-base opacity-75 me-2"></i>My Orders
             </a>
           </li>
@@ -337,7 +339,7 @@
             <hr class="dropdown-divider">
           </li>
           <li *ngIf="user.is_logged_in">
-            <a class="dropdown-item" href="#" (click)="logout()">
+            <a class="dropdown-item" (click)="logout(); closeAllDropdowns(); $event.preventDefault()">
               <i class="ci-log-out fs-base opacity-75 me-2"></i>Sign Out
             </a>
           </li>

@@ -13,7 +13,6 @@ import { ConfigService } from '@config';
 import { DirectionService, InConfiguration, RightSidebarService } from '@core';
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { NgScrollbar } from 'ngx-scrollbar';
 import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-icons.component';
 
 @Component({
@@ -24,7 +23,6 @@ import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-
     imports: [
         NgClass,
         FeatherIconsComponent,
-        NgScrollbar,
         MatButtonToggleModule,
         MatSlideToggleModule,
     ]

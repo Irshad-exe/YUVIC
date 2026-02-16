@@ -2,7 +2,7 @@
   <a href="javascript:void(0)" class="settingPanelToggle" (click)="toggleRightSidebar()">
     <app-feather-icons [icon]="'settings'" [class]="'setting-sidebar-icon'"></app-feather-icons>
   </a>
-  <ng-scrollbar [style.height]="maxHeight + 'px'" visibility="hover">
+  <div [style.height]="maxHeight + 'px'" style="overflow-y: auto;">
     <div class="settingSidebar-body ps-container ps-theme-default">
       <div class=" fade show active">
         <div class="setting-panel-header">Setting Panel
@@ -73,5 +73,5 @@
         </div>
       </div>
     </div>
-  </ng-scrollbar>
+  </div>
 </div>

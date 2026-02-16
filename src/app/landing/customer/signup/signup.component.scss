@@ -19,8 +19,35 @@
 
 // Password toggle custom styles
 .password-toggle {
+  position: relative;
+  
   .form-control {
     padding-right: 3.5rem;
+  }
+  
+  // Hide Cartzilla's default password toggle button
+  > .password-toggle-button:not(:has(input.btn-check)) {
+    display: none !important;
+  }
+  
+  .password-toggle-button {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    z-index: 5;
+    cursor: pointer;
+    
+    .btn-check {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    i {
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
   }
 }
 
@@ -42,4 +69,64 @@
 // Benefits cards styling
 .card.bg-transparent {
   backdrop-filter: blur(10px);
+}
+
+// Fix checkbox visibility - Force override Cartzilla styles
+.form-check-input {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  margin-right: 8px !important;
+  vertical-align: top !important;
+  background-color: #fff !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  border: 2px solid #000 !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  print-color-adjust: exact !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+  
+  &:checked {
+    background-color: #fd150d !important;
+    border-color: #fd150d !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
+  }
+  
+  &:focus {
+    border-color: #86b7fe !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+  }
+}
+
+.form-check {
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 0 !important;
+  margin-bottom: 0.5rem !important;
+  position: relative !important;
+  
+  &::before,
+  &::after {
+    display: none !important;
+  }
+}
+
+.form-check-label {
+  cursor: pointer !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  display: inline-block !important;
+  position: relative !important;
+  z-index: 1 !important;
 }

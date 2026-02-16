@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart, CartItem } from '../models/cart.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../core/service/auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,9 +18,22 @@ export class CartService {
     });
 
     cart$ = this.cartSubject.asObservable();
-    private readonly STORAGE_KEY = 'cart';
+    private readonly STORAGE_KEY_PREFIX = 'cart_user_';
+    private currentUserId: string = '';
 
-    constructor(private snackBar: MatSnackBar) {
+    constructor(private snackBar: MatSnackBar, private authService: AuthService) {
+        // Subscribe to user changes to load correct cart
+        this.authService.currentUser$.subscribe(user => {
+            const newUserId = user?.id ? String(user.id) : 'guest';
+            if (this.currentUserId !== newUserId) {
+                this.currentUserId = newUserId;
+                this.loadCart();
+            }
+        });
+        
+        // Initial load
+        const tokenUser = this.authService.getDecodeToken();
+        this.currentUserId = tokenUser?.id ? String(tokenUser.id) : 'guest';
         this.loadCart();
     }
 
@@ -108,11 +122,13 @@ export class CartService {
     }
 
     private saveCart(cart: Cart): void {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(cart));
+        const storageKey = `${this.STORAGE_KEY_PREFIX}${this.currentUserId}`;
+        localStorage.setItem(storageKey, JSON.stringify(cart));
     }
 
     private loadCart(): void {
-        const savedCart = localStorage.getItem(this.STORAGE_KEY);
+        const storageKey = `${this.STORAGE_KEY_PREFIX}${this.currentUserId}`;
+        const savedCart = localStorage.getItem(storageKey);
         if (savedCart) {
             try {
                 const parsedCart: Cart = JSON.parse(savedCart);
@@ -120,6 +136,9 @@ export class CartService {
             } catch (e) {
                 console.error('Failed to load cart from storage', e);
             }
+        } else {
+            // No saved cart, reset to empty
+            this.clearCart();
         }
     }
 }

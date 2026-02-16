@@ -41,9 +41,9 @@ export class CartzillaService {
     }
 
     // Safe initialization with try-catch for each component type
+    // NOTE: Dropdowns are now handled by Angular, not Bootstrap JS
     const initializers = [
       { selector: '[data-bs-toggle="tooltip"]', factory: (el: Element) => new bootstrap.Tooltip(el) },
-      { selector: '.dropdown-toggle', factory: (el: Element) => new bootstrap.Dropdown(el) },
       { selector: '.offcanvas', factory: (el: Element) => new bootstrap.Offcanvas(el) },
       { selector: '.collapse', factory: (el: Element) => new bootstrap.Collapse(el, { toggle: false }) }
     ];

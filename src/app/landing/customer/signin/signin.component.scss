@@ -33,3 +33,50 @@
   background-position: right calc(0.375em + 0.25rem) center;
   background-size: calc(0.75em + 0.5rem) calc(0.75em + 0.5rem);
 }
+
+// Fix checkbox visibility
+.form-check-input {
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 1 !important;
+  pointer-events: auto !important;
+  width: 1.125em !important;
+  height: 1.125em !important;
+  margin-top: 0.125em !important;
+  margin-right: 0.5rem !important;
+vertical-align: top !important;
+  background-color: #fff !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  border: 1px solid rgba(0, 0, 0, 0.25) !important;
+  appearance: none !important;
+  print-color-adjust: exact !important;
+  flex-shrink: 0 !important;
+  cursor: pointer;
+  
+  &:checked {
+    background-color: #fd110d !important;
+    border-color: #fd110d !important;
+  }
+}
+
+.form-check {
+  display: flex !important;
+  align-items: center !important;
+  // gap: 0.5rem !important;
+  padding-left: 0 !important;
+}
+
+.form-check-label {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  cursor: pointer !important;
+}
+
+.password-toggle .btn-check {
+  position: absolute !important;
+  clip: rect(0, 0, 0, 0) !important;
+  pointer-events: none !important;
+}

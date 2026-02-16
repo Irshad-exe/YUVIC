@@ -20,9 +20,6 @@ import {
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { FeatherModule } from 'angular-feather';
-import { allIcons } from 'angular-feather/icons';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
@@ -63,8 +60,6 @@ export const appConfig: ApplicationConfig = {
         },
       },
     },
-    importProvidersFrom(FeatherModule.pick(allIcons)),
-    provideCharts(withDefaultRegisterables()),
     provideHttpClient(withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,

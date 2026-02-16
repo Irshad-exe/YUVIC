@@ -3,7 +3,7 @@
   <aside id="leftsidebar" class="sidebar" (mouseenter)="mouseHover()" (mouseleave)="mouseOut()">
     <!-- Menu -->
     <div class="menu">
-      <ng-scrollbar [style.height]="listMaxHeight + 'px'" visibility="hover">
+      <div [style.height]="listMaxHeight + 'px'" style="overflow-y: auto;">
         <ul class="list">
           <li class="sidebar-user-panel">
             <div class="user-panel">
@@ -84,7 +84,7 @@
             </a>
           </li>
         </ul>
-      </ng-scrollbar>
+      </div>
     </div>
     <!-- #Menu -->
   </aside>
